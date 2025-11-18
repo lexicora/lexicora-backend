@@ -1,2 +1,2 @@
 # lexicora-backend
-The repository of the backend of the Lexicora Platform
+The repository of the backend of the Lexicora platform
