@@ -1,0 +1,75 @@
+# top-most EditorConfig file
+root = true
+
+# General settings (applies to all files)
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+indent_style = space
+indent_size = 4
+dotnet_style_namespace_match_folder = true:suggestion
+
+# C# files
+[*.cs]
+indent_style = space
+indent_size = 4
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+csharp_new_line_before_open_brace = all
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = flush_left
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_parentheses = expressions, type_casts
+csharp_using_directive_placement = outside_namespace:silent
+csharp_style_throw_expression = true:suggestion
+csharp_style_prefer_null_check_over_type_check = true:suggestion
+csharp_prefer_simple_default_expression = true:suggestion
+csharp_style_prefer_local_over_anonymous_function = true:suggestion
+csharp_style_prefer_index_operator = true:suggestion
+csharp_style_prefer_range_operator = true:suggestion
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+
+# Razor files (if using Blazor or Razor Pages)
+[*.cshtml]
+indent_style = space
+indent_size = 4
+
+[*.razor]
+indent_style = space
+indent_size = 4
+
+# JSON files (common in .NET Core config)
+[*.json]
+indent_style = space
+indent_size = 2
+
+# XML files - includes .csproj, .props, .targets, .config, etc.
+[*.{csproj,fsproj,props,targets,config,resx,xml}]
+indent_style = space
+indent_size = 2
+
+# YAML files (e.g., GitHub workflows, Azure Pipelines)
+[*.yml]
+indent_style = space
+indent_size = 2
+
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+# EditorConfig files
+[*.editorconfig]
+indent_style = space
+indent_size = 2
+
+# Markdown (use 2 spaces for better readability in diffs)
+[*.md]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
