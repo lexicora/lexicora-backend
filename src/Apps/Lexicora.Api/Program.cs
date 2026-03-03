@@ -36,6 +36,8 @@ namespace Lexicora.Api
                 app.MapScalarApiReference(options =>
                 {
                     options
+                        .WithTheme(ScalarTheme.Purple)
+                        //.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch)
                         .HideClientButton()
                         .WithTitle("Lexicora API Reference");
                 });
