@@ -2,7 +2,9 @@
   <Folder Name="/0_Domain/" />
   <Folder Name="/1_Persistence/" />
   <Folder Name="/2_Infrastructure/" />
-  <Folder Name="/3_Api/" />
+  <Folder Name="/3_Api/">
+    <Project Path="src/Api/Lexicora.Api/Lexicora.Api.csproj" Id="4f17b8c5-f1d9-42a7-9a0a-73c26a39ced4" />
+  </Folder>
   <Folder Name="/_SolutionItems/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />

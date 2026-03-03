@@ -1,0 +1,6 @@
+@Lexicora.Api_HostAddress = http://localhost:5177
+
+GET {{Lexicora.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
