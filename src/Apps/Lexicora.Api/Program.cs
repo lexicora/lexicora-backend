@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 
 namespace Lexicora.Api
 {
@@ -13,12 +14,27 @@ namespace Lexicora.Api
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            // Register source generated JSON contexts
+            //builder.Services.ConfigureHttpJsonOptions(options =>
+            //{
+            //    options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
+            //        AppJsonContext.Default,
+            //        UserJsonContext.Default
+            //    );
+            //});
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference(options =>
+                {
+                    options
+                        .HideClientButton()
+                        .WithTitle("Lexicora API Reference");
+                });
             }
 
             app.UseHttpsRedirection();
