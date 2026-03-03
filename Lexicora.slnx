@@ -8,8 +8,8 @@
   <Folder Name="/2_Infrastructure/">
     <Project Path="src/Infrastructure/Lexicora.Infrastructure/Lexicora.Infrastructure.csproj" Id="c8d13f18-8166-45c8-a105-5da855ecf603" />
   </Folder>
-  <Folder Name="/3_Api/">
-    <Project Path="src/Api/Lexicora.Api/Lexicora.Api.csproj" Id="4f17b8c5-f1d9-42a7-9a0a-73c26a39ced4" />
+  <Folder Name="/3_Apps/">
+    <Project Path="src/Apps/Lexicora.Api/Lexicora.Api.csproj" Id="4f17b8c5-f1d9-42a7-9a0a-73c26a39ced4" />
   </Folder>
   <Folder Name="/_SolutionItems/">
     <File Path=".editorconfig" />
