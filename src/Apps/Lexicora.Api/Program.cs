@@ -1,3 +1,7 @@
+using System.Text.Json.Serialization.Metadata;
+
+using Lexicora.Api.Json.Contexts;
+
 using Scalar.AspNetCore;
 
 namespace Lexicora.Api
@@ -15,13 +19,13 @@ namespace Lexicora.Api
             builder.Services.AddOpenApi();
 
             // Register source generated JSON contexts
-            //builder.Services.ConfigureHttpJsonOptions(options =>
-            //{
-            //    options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
-            //        AppJsonContext.Default,
-            //        UserJsonContext.Default
-            //    );
-            //});
+            builder.Services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
+                    //AppJsonContext.Default,
+                    WeatherForecastJsonContext.Default
+                );
+            });
 
             var app = builder.Build();
 
