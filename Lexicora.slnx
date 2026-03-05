@@ -1,17 +1,17 @@
 <Solution>
-  <Folder Name="/00_Domain/">
+  <Folder Name="/0_Domain/">
     <Project Path="src/Domain/Lexicora.Domain/Lexicora.Domain.csproj" Id="ba0b745f-63f8-4b1e-8054-3f5d61d458ff" />
   </Folder>
-  <Folder Name="/10_Persistence/">
+  <Folder Name="/1_Persistence/">
     <Project Path="src/Persistence/Lexicora.Persistence.Postgres/Lexicora.Persistence.Postgres.csproj" Id="e64e94ed-2369-4be0-806e-541f98eba6f6" />
   </Folder>
-  <Folder Name="/20_Infrastructure/">
+  <Folder Name="/2_Infrastructure/">
     <Project Path="src/Infrastructure/Lexicora.Infrastructure/Lexicora.Infrastructure.csproj" Id="c8d13f18-8166-45c8-a105-5da855ecf603" />
   </Folder>
-  <Folder Name="/30_Apps/">
+  <Folder Name="/3_Apps/">
     <Project Path="src/Apps/Lexicora.Api/Lexicora.Api.csproj" Id="4f17b8c5-f1d9-42a7-9a0a-73c26a39ced4" />
   </Folder>
-  <Folder Name="/90_Tests/" />
+  <Folder Name="/9_Tests/" />
   <Folder Name="/_SolutionItems/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
