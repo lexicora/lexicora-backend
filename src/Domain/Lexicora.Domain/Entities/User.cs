@@ -1,0 +1,18 @@
+namespace Lexicora.Domain.Entities;
+
+public class User
+{
+    public Guid Id { get; set; } // Matches Supabase Auth UUID
+    public string Email { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string? DisplayName { get; set; }
+
+    public int EntryCount { get; set; } // Denormalized count of entries for performance
+    public int TopicCount { get; set; } // Denormalized count of topics for performance
+
+    // Navigation
+    public List<Topic> Topics { get; set; } = [];
+    public List<Entry> Entries { get; set; } = [];
+}
