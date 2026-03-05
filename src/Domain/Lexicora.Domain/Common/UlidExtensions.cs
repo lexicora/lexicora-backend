@@ -1,8 +1,5 @@
 namespace Lexicora.Domain.Common;
 
-using System;
-using System.Threading;
-
 public static class UlidExtensions
 {
     extension(Ulid)

@@ -22,7 +22,7 @@ namespace Lexicora.Api
             builder.Services.ConfigureHttpJsonOptions(options =>
             {
                 options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
-                    //AppJsonContext.Default,
+                    AppJsonContext.Default,
                     WeatherForecastJsonContext.Default
                 );
             });
