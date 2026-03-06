@@ -17,4 +17,8 @@
     <ContainerPort Include="8081" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Lexicora.Domain\Lexicora.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

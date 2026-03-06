@@ -4,4 +4,8 @@
 
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Lexicora.Domain\Lexicora.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
