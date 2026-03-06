@@ -2,7 +2,7 @@ namespace Lexicora.Domain.Entities;
 
 public class User
 {
-    public Guid Id { get; set; } // Matches Supabase Auth UUID, let supabase handle id gen?
+    public Guid Id { get; set; } // = Ulid.NewUlid().ToGuid(); // Matches Supabase Auth UUID, let supabase handle id gen?
     public string Email { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;

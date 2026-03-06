@@ -7,7 +7,9 @@ public class Topic
 
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public List<string> Tags { get; set; } = [];
     public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
 
     public int EntryCount { get; set; } // Denormalized count of entries for performance
 
