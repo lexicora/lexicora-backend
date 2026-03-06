@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lexicora.Persistence.Postgres.Schema;
 
-public class TopicConfiguration : IEntityTypeConfiguration<Topic>
+internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 {
     public void Configure(EntityTypeBuilder<Topic> builder)
     {

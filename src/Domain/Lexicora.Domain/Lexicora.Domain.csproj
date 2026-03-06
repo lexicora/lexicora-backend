@@ -5,7 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\Block\NewFolder\**" />
+    <EmbeddedResource Remove="Entities\Block\NewFolder\**" />
+    <None Remove="Entities\Block\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ulid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Block\Content\Inline\" />
+    <Folder Include="Entities\Block\Content\Table\" />
+    <Folder Include="Serialization\" />
   </ItemGroup>
 
 </Project>
