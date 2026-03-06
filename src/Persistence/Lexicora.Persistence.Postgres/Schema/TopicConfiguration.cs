@@ -38,6 +38,11 @@ public class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .IsUnicode()
             .IsRequired();
 
+        builder.Property(t => t.IsFavorite)
+            .HasColumnName("is_favorite")
+            .HasDefaultValue(false)
+            .IsRequired();
+
         builder.Property(t => t.CreatedAt)
             .HasColumnName("created_at");
 

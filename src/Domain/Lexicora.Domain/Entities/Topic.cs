@@ -7,6 +7,7 @@ public class Topic
 
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public bool IsFavorite { get; set; } = false;
     public List<string> Tags { get; set; } = [];
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }

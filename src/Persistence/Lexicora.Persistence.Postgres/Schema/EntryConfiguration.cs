@@ -41,10 +41,15 @@ public class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .HasMaxLength(1000)
             .IsUnicode();
 
-        builder.Property(t => t.Tags)
+        builder.Property(e => e.Tags)
             .HasColumnName("tags")
             .HasColumnType("text[]")
             .IsUnicode()
+            .IsRequired();
+
+        builder.Property(e => e.IsFavorite)
+            .HasColumnName("is_favorite")
+            .HasDefaultValue(false)
             .IsRequired();
 
         builder.Property(e => e.Url)

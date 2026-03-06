@@ -10,6 +10,7 @@ public class Entry
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
     public List<string> Tags { get; set; } = [];
+    public bool IsFavorite { get; set; } = false;
     public string? FaviconUrl { get; set; }
     public string Url { get; set; } = string.Empty; // maps to location.href or baseUri
     public string OriginUrl { get; set; } = string.Empty; // The original URL before any redirects (if available)
