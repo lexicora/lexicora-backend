@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Lexicora.Domain\Lexicora.Domain.csproj" />
+    <ProjectReference Include="..\..\Persistence\Lexicora.Persistence.Postgres\Lexicora.Persistence.Postgres.csproj" />
   </ItemGroup>
 
 </Project>
