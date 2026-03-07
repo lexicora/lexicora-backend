@@ -26,48 +26,40 @@ namespace Lexicora.Domain.Entities.Block.Blocks;
 [JsonDerivedType(typeof(TableBlock), BlockTypes.Table)]
 public abstract class BlockBase
 {
-    // From Base (not exposed in API) // Maybe expose in api (for just one joined Id).
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    public Guid Id { get; set; } // Internal DB Id, not serialized in API
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+    [JsonIgnore]
     public Guid EntryId { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+    [JsonIgnore]
     public Guid? ParentBlockId { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+    [JsonIgnore]
     public Entry? Entry { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+    [JsonIgnore]
     public BlockBase? ParentBlock { get; set; } // Parent for nested blocks
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    public int Order { get; set; } // Order in document (including/excluding? nested)
+    [JsonIgnore]
+    public double Order { get; set; } // Order in document (nested blocks should have their own order and not increment the top level block order)
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    public int NestLevel { get; set; } // Default 0 means top level
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    public int? OrderNested { get; set; }
-
-    ///// <summary>The nest level of the child, child... block of this block.</summary>
-    //[JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-    //public int DeepestChildBlockNestLevel { get; set; }
+    /// <summary>
+    /// Gets or sets the JSON representation of the content.
+    /// </summary>
+    /// <remarks>This property is ignored during JSON serialization when the condition is set to always
+    /// ignore. It is intended to hold the content in JSON format, which can be used for data interchange or
+    /// storage.</remarks>
+    [JsonIgnore]
+    public string? ContentJson { get; set; }
 
     // Actual Block
-    /// <summary>The id of the actual Block, used by BlockNote.</summary>
+    /// <summary>The id of the actual Block, used by BlockNote and used as id in the database.</summary>
     [JsonPropertyName("id")]
-    public Guid BlockId { get; set; } = Guid.NewGuid();// UUIDv4
+    public Guid Id { get; set; }
 
     [JsonPropertyName("type")]
     public required string Type { get; set; }
 
     [JsonPropertyName("props")]
     public Dictionary<string, JsonElement> Props { get; set; } = new();
-
-    // Info: Derived classes should implement a Content property.
-    // Content implemented in derived classes of BlockBase
 
     [JsonPropertyName("children")]
     public List<BlockBase> Children { get; set; } = [];

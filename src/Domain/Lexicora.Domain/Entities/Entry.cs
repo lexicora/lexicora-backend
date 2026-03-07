@@ -1,3 +1,5 @@
+using Lexicora.Domain.Entities.Block.Blocks;
+
 namespace Lexicora.Domain.Entities;
 
 public class Entry
@@ -28,5 +30,7 @@ public class Entry
     // Navigation
     public User? User { get; set; }
     public Topic? Topic { get; set; }
-    //public ICollection<Block> Blocks { get; set; } = new List<Block>(); // TODO: Add Blocks later when we have the Block entity defined
+    public List<BlockBase> Blocks { get; set; } = []; // TODO: Add Blocks later when we have the Block entity defined
+
+    //public ICollection<BlockBase> Blocks { get; set; } = new List<Block>(); // TODO: Add Blocks later when we have the Block entity defined
 }

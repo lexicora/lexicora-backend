@@ -112,6 +112,12 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
-        // TODO: Add blocks and optimize queries with indexes if needed
+        builder.HasMany(e => e.Blocks)
+            .WithOne(b => b.Entry)
+            .HasForeignKey(b => b.EntryId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
+        // TODO: Optimize queries with indexes if needed
     }
 }
