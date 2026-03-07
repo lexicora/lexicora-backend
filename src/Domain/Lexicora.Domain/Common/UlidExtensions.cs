@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Lexicora.Domain.Common;
 
 public static class UlidExtensions
@@ -72,6 +74,7 @@ public sealed class MonotonicGenerator
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void IncrementEntropy(byte[] entropy)
     {
         for (int i = entropy.Length - 1; i >= 0; i--)
