@@ -17,7 +17,6 @@
   <ItemGroup>
     <Folder Include="Entities\Block\Content\Inline\" />
     <Folder Include="Entities\Block\Content\Table\" />
-    <Folder Include="Serialization\" />
   </ItemGroup>
 
 </Project>

@@ -16,6 +16,8 @@ public sealed class TableContent : IBlockContent
     /// <summary>Default is 3 header rows.</summary>
     public int HeaderRows { get; set; } // default 3 header rows (header rows are disabled in table by default)
 
+    // TODO: Add potential HeaderColumns property.
+
     /// <summary>Default is 2 table rows with, with each table row having 3 table cells.</summary>
     public List<TableRow> Rows { get; set; } = [];
 }
