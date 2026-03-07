@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization.Metadata;
 
-using Lexicora.Api.Json.Contexts;
+using Lexicora.Api.Infrastructure.Json.Contexts;
 
 using Scalar.AspNetCore;
 

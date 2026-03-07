@@ -2,7 +2,7 @@ using System.Buffers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Lexicora.Api.Json.Converters;
+namespace Lexicora.Api.Infrastructure.Json.Converters;
 
 /// <summary>
 /// JsonConverter for ULID that serializes and deserializes ULIDs as lowercase strings.

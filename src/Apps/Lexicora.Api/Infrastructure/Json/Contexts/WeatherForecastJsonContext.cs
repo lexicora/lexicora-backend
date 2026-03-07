@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Lexicora.Api.Json.Contexts;
+namespace Lexicora.Api.Infrastructure.Json.Contexts;
 
 /// <summary>
 /// Source-generated JSON context for serializing and deserializing <see cref="Lexicora.Api.WeatherForecast"/>.

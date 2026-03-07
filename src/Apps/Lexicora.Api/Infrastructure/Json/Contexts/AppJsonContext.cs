@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-using Lexicora.Api.Json.Converters;
+using Lexicora.Api.Infrastructure.Json.Converters;
 
-namespace Lexicora.Api.Json.Contexts;
+namespace Lexicora.Api.Infrastructure.Json.Contexts;
 
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
