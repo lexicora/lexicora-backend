@@ -30,39 +30,45 @@ public sealed class MonotonicGenerator
     /// <summary>
     /// Generates a new ULID that is monotonic, meaning it will always be greater than the last generated ULID if called in quick succession.
     /// </summary>
-    public Ulid NewUlid()
+    public Ulid NewUlid(DateTimeOffset? timestamp = null)
     {
         lock (_lock)
         {
-            var now = DateTimeOffset.UtcNow;
-            var timestamp = now.ToUnixTimeMilliseconds();
+            var timeToUse = timestamp ?? DateTimeOffset.UtcNow;
+            var currentUnixTime = timeToUse.ToUnixTimeMilliseconds();
 
-            if (timestamp > _lastTimestamp)
+            if (currentUnixTime > _lastTimestamp)
             {
-                // Generate new ULID with fresh entropy
-                var ulid = Ulid.NewUlid(now);
-                _lastTimestamp = timestamp;
-                Buffer.BlockCopy(ulid.ToByteArray(), 6, _lastEntropy, 0, 10);
-                return ulid;
+                // 1. Generate new ULID with fresh entropy
+                var ulidBytes = Ulid.NewUlid(timeToUse).ToByteArray();
+
+                // 2. Clear the Most Significant Bit (MSB) of the first entropy byte (index 6).
+                // 0x7F is 01111111 in binary. This ensures we have 2^79 room for increments.
+                ulidBytes[6] &= 0x7F;
+
+                _lastTimestamp = currentUnixTime;
+                Buffer.BlockCopy(ulidBytes, 6, _lastEntropy, 0, 10);
+
+                return new Ulid(ulidBytes);
             }
 
             // Monotonic: increment entropy
             IncrementEntropy(_lastEntropy);
 
-            var ulidBytes = new byte[16];
+            var newUlidBytes = new byte[16];
 
-            // Write timestamp (48 bits, big endian)
-            ulidBytes[0] = ( byte )( timestamp >> 40 & 0xFF );
-            ulidBytes[1] = ( byte )( timestamp >> 32 & 0xFF );
-            ulidBytes[2] = ( byte )( timestamp >> 24 & 0xFF );
-            ulidBytes[3] = ( byte )( timestamp >> 16 & 0xFF );
-            ulidBytes[4] = ( byte )( timestamp >> 8 & 0xFF );
-            ulidBytes[5] = ( byte )( timestamp & 0xFF );
+            // Write the _lastTimestamp (48 bits, big endian)
+            newUlidBytes[0] = ( byte )( _lastTimestamp >> 40 );
+            newUlidBytes[1] = ( byte )( _lastTimestamp >> 32 );
+            newUlidBytes[2] = ( byte )( _lastTimestamp >> 24 );
+            newUlidBytes[3] = ( byte )( _lastTimestamp >> 16 );
+            newUlidBytes[4] = ( byte )( _lastTimestamp >> 8 );
+            newUlidBytes[5] = ( byte )_lastTimestamp;
 
             // Append entropy
-            Buffer.BlockCopy(_lastEntropy, 0, ulidBytes, 6, 10);
+            Buffer.BlockCopy(_lastEntropy, 0, newUlidBytes, 6, 10);
 
-            return new Ulid(ulidBytes);
+            return new Ulid(newUlidBytes);
         }
     }
 
