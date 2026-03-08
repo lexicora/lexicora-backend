@@ -10,7 +10,7 @@ namespace Lexicora.Api.Features.Topics.GetTopicById;
 
 public class GetTopicByIdEndpoint : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder group)
+    public static void Map(IEndpointRouteBuilder group)
     {
         group.MapGet("/{id}", HandleAsync)
             //.WithGroupName("Topics")

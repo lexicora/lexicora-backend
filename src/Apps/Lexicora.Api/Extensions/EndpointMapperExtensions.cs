@@ -7,9 +7,10 @@ public static class EndpointMapperExtensions
     /// <summary>
     /// Maps all configured endpoints to the specified <see cref="IEndpointRouteBuilder"/>.
     /// </summary>
-    public static void MapConfiguredEndpoints(this IEndpointRouteBuilder endpointRouteBuilder)
+    /// <param name="baseAppRoute">The root application route builder to which all endpoints will be mapped.</param>
+    public static void MapConfiguredEndpoints(this IEndpointRouteBuilder baseAppRoute)
     {
         // Add the endpoints that implement IEndpointConfiguration here
-        TopicsConfiguration.Map(endpointRouteBuilder);
+        TopicsConfiguration.MapEndpoints(baseAppRoute);
     }
 }

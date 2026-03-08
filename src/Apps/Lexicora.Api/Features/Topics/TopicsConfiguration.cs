@@ -7,9 +7,9 @@ namespace Lexicora.Api.Features.Topics;
 
 public class TopicsConfiguration : IEndpointConfiguration
 {
-    public static void Map(IEndpointRouteBuilder endpointRouteBuilder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
-        var topicsGroup = endpointRouteBuilder.MapGroup("/topics")
+        var topicsGroup = builder.MapGroup("/topics")
             .WithGroupName("Topics Group")
             .WithName("Topics")
             .WithDisplayName("Topics")
@@ -18,11 +18,6 @@ public class TopicsConfiguration : IEndpointConfiguration
             .WithDescription("Topics endpoints.")
             .WithBadge("Topics", color: "blue");
 
-        MapEndpoints(topicsGroup);
-    }
-
-    private static void MapEndpoints(IEndpointRouteBuilder group)
-    {
-        GetTopicByIdEndpoint.MapEndpoint(group);
+        GetTopicByIdEndpoint.Map(topicsGroup);
     }
 }
