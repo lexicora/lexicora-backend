@@ -1,8 +1,17 @@
 using System.Text.Json.Serialization.Metadata;
 
+using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Json.Contexts;
+using Lexicora.Persistence.Postgres;
+
+using Microsoft.EntityFrameworkCore;
+
+using Npgsql;
 
 using Scalar.AspNetCore;
+
+// Tells Dapper.AOT to generate interceptors for the API assembly
+//[module: DapperAot]
 
 namespace Lexicora.Api;
 
@@ -30,6 +39,28 @@ public class Program
             // Alternatively, you can set the TypeInfoResolver directly if you don't have other resolvers to combine.
         });
 
+        // Configure the database connection and register the data source as a singleton
+        var connectionString = builder.Configuration.GetConnectionString("Default");
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+
+        var dataSource = dataSourceBuilder.Build();
+
+        builder.Services.AddSingleton(dataSource);
+
+        // Register the DbContext with the same data source
+        builder.Services.AddDbContextPool<AppDbContext>(options =>
+        {
+            // Tell EF Core to use the exact same Data Source Dapper is using!
+            options.UseNpgsql(dataSource);
+
+            // Good for local debugging, remove in production:
+            if (builder.Environment.IsDevelopment())
+            {
+                options.EnableSensitiveDataLogging();
+                options.EnableDetailedErrors();
+            }
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -50,24 +81,9 @@ public class Program
 
         app.UseAuthorization();
 
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        // TODO: Maybe add versioning here in the future?
 
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                        new WeatherForecast
-                        {
-                            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            TemperatureC = Random.Shared.Next(-20, 55),
-                            Summary = summaries[Random.Shared.Next(summaries.Length)]
-                        })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast");
+        app.MapConfiguredEndpoints();
 
         app.Run();
     }

@@ -1,3 +1,5 @@
+using Lexicora.Api.Features.Topics;
+
 namespace Lexicora.Api.Extensions;
 
 public static class EndpointMapperExtensions
@@ -8,5 +10,6 @@ public static class EndpointMapperExtensions
     public static void MapConfiguredEndpoints(this IEndpointRouteBuilder endpointRouteBuilder)
     {
         // Add the endpoints that implement IEndpointConfiguration here
+        TopicsConfiguration.Map(endpointRouteBuilder);
     }
 }

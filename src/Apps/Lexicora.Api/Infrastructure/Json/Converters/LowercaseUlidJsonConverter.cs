@@ -59,7 +59,7 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
     /// Matches the format used by the Cysharp library.
     /// </summary>
     /// <remarks>
-    /// Modified implementation to  ensure the output is in lowercase.
+    /// Modified implementation to ensure the output is in lowercase.
     /// </remarks>
     public override void Write(Utf8JsonWriter writer, Ulid value, JsonSerializerOptions options)
     {

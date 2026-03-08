@@ -15,7 +15,7 @@ public interface IEndpoint
 {
     /// <summary>
     /// Maps the endpoint to the specified route builder.
-    ///    <param name="group"></param>
+    /// <param name="group"></param>
     /// </summary>
-    static abstract void MapEndpoint(IEndpointRouteBuilder group);
+    static abstract void MapEndpoint(IEndpointRouteBuilder group); // TODO: Maybe rename it to just Map.
 }
