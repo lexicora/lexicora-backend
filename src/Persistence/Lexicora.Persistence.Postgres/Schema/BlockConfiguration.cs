@@ -13,7 +13,11 @@ public class BlockConfiguration : IEntityTypeConfiguration<BlockBase>
 {
     public void Configure(EntityTypeBuilder<BlockBase> builder)
     {
-        builder.ToTable("blocks", "public"); // For Supabase configuration
+        builder.ToTable("blocks", "public", b =>
+        {
+            // Maybe change this to a code comment only
+            b.HasComment("Blocks represent the content of an entry. They can be nested to create complex structures. Each block has a type that determines how it should be rendered and what properties it has. The Props column is a JSONB column that stores the properties of the block, which can vary depending on the block type. The ContentJson column is used for blocks that have content that can be represented as JSON, such as tables or code blocks.");
+        }); // public For Supabase configuration
 
         builder.HasKey(b => b.Id);
 

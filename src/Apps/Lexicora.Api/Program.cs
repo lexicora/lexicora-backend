@@ -27,6 +27,9 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        // Add validation
+        builder.Services.AddValidation();
+
         // Register source generated JSON contexts
         builder.Services.ConfigureHttpJsonOptions(options =>
         {

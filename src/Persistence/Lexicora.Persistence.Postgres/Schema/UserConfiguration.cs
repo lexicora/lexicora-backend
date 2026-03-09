@@ -9,7 +9,11 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("users", "public"); // For Supabase configuration
+        builder.ToTable("users", "public", u =>
+        {
+            // Maybe change this to a code comment only
+            u.HasComment("Represents a user of the application. Each user has a unique email and username, as well as personal information like first name, last name, and display name. The EntryCount property keeps track of how many entries the user has saved across all topics, which can be useful for displaying user summaries without needing to load all entries. Auth stuff handled by the supabase auth user schema.");
+        }); // public For Supabase configuration
 
         builder.HasKey(u => u.Id);
 

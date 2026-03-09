@@ -1,5 +1,4 @@
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Domain.Entities;
 using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -13,34 +12,21 @@ public class GetTopicByIdEndpoint : IEndpoint
     public static void Map(IEndpointRouteBuilder group)
     {
         group.MapGet("/{id}", HandleAsync)
-            //.WithGroupName("Topics")
             .WithName("GetTopicById")
-            .WithDisplayName("GetTopicById")
-            .WithTags("Topics", "Topic")
+            .WithTags("Topics")
             .WithSummary("Gets a topic by id.")
             .WithDescription(
-                "Gets a topic by id. Navigation properties are not included, by default so no dto mapping necessary.")
-            .WithBadge("Topics", color: "blue");
-        //.Produces(StatusCodes.Status200OK)
-        //.ProducesProblem(StatusCodes.Status400BadRequest)
-        //.ProducesProblem(StatusCodes.Status404NotFound);
-
+                "Gets a topic by id. Navigation properties are not included, by default so no dto mapping necessary.") // Supposedly supports markdown and used for extensive documentation.
+            .WithBadge("Topics", color: "blue") // Optional for scalar
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Ok<Topic>, NotFound, BadRequest<string>>> HandleAsync(string id, AppDbContext dbContext)
+    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound>> HandleAsync(Ulid id, AppDbContext dbContext)
     {
-        // Maybe extract this id conversion logic, to make it usable across the app, and to avoid code duplication.
-        //var isValidId = Ulid.TryParse(id, CultureInfo.InvariantCulture, out var ulidId);
-        var isValidId = Ulid.TryParse(id, out var ulidId);
-        if (!isValidId) return TypedResults.BadRequest("Invalid id format.");
-
-        var guidId = ulidId.ToGuid();
-
-        var topic = await dbContext.Topics.FindAsync(guidId);
+        var topic = await dbContext.Topics.FindAsync(id.ToGuid());
 
         return topic is not null
-            ? TypedResults.Ok(topic /*TODO: Use Dto, for Guid to Ulid conversion*/)
-            // Navigation properties are not included, by default so no dto mapping necessary.
+            ? TypedResults.Ok(topic.MapToResponse())
             : TypedResults.NotFound();
     }
 }

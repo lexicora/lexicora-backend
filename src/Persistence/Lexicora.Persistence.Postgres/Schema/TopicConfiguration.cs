@@ -9,7 +9,11 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 {
     public void Configure(EntityTypeBuilder<Topic> builder)
     {
-        builder.ToTable("topics", "public"); // For Supabase configuration
+        builder.ToTable("topics", "public", t =>
+        {
+            // Maybe change this to a code comment only
+            t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a title, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
+        }); // public For Supabase configuration
 
         builder.HasKey(t => t.Id);
 

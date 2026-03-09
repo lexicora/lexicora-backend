@@ -9,7 +9,11 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 {
     public void Configure(EntityTypeBuilder<Entry> builder)
     {
-        builder.ToTable("entries", "public"); // For Supabase configuration
+        builder.ToTable("entries", "public", e =>
+        {
+            // Maybe change this to a code comment only
+            e.HasComment("Represents a saved web page or article with metadata and content blocks.");
+        }); // public For Supabase configuration
 
         builder.HasKey(e => e.Id);
 
