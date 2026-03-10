@@ -34,8 +34,8 @@ public class Program
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
             var combinedResolver = JsonTypeInfoResolver.Combine(
-                AppJsonContext.Default,
-                WeatherForecastJsonContext.Default
+                AppJsonContext.Default
+            //WeatherForecastJsonContext.Default
             );
 
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, combinedResolver);

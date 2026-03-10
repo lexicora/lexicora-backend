@@ -8,4 +8,9 @@
     <ProjectReference Include="..\..\Domain\Lexicora.Domain\Lexicora.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Ai\" />
+    <Folder Include="Auth\" />
+  </ItemGroup>
+
 </Project>
