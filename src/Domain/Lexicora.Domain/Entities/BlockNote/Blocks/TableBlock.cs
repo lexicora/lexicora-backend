@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-using Lexicora.Domain.Entities.Block.Content.Table;
+using Lexicora.Domain.Entities.BlockNote.Content.Table;
 
-namespace Lexicora.Domain.Entities.Block.Blocks;
+namespace Lexicora.Domain.Entities.BlockNote.Blocks;
 
 /// <summary>
 /// Table block type, derives from <see cref="BlockBase"/>.

@@ -1,4 +1,4 @@
-namespace Lexicora.Domain.Constants;
+namespace Lexicora.Domain.Constants.Block;
 
 /// <summary>
 /// Constants of every block type.

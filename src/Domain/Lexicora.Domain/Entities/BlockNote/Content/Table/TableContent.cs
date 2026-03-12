@@ -1,7 +1,7 @@
-using Lexicora.Domain.Constants;
-using Lexicora.Domain.Contracts.Block.Content;
+using Lexicora.Domain.Constants.Block;
+using Lexicora.Domain.Contracts.BlockNote.Content;
 
-namespace Lexicora.Domain.Entities.Block.Content.Table;
+namespace Lexicora.Domain.Entities.BlockNote.Content.Table;
 
 /// <summary>
 /// Represents a table structure with rows and columns.

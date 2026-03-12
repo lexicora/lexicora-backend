@@ -1,4 +1,4 @@
-namespace Lexicora.Domain.Entities.Block.Content.Table;
+namespace Lexicora.Domain.Entities.BlockNote.Content.Table;
 
 /// <summary>
 /// Represents a row in a table, containing a list of table cells.

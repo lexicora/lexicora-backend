@@ -1,6 +1,6 @@
-using Lexicora.Domain.Constants;
+using Lexicora.Domain.Constants.Block;
 
-namespace Lexicora.Domain.Entities.Block.Content.Inline;
+namespace Lexicora.Domain.Entities.BlockNote.Content.Inline;
 
 /// <summary>
 /// Represents a styled text element that contains text content and associated styles.

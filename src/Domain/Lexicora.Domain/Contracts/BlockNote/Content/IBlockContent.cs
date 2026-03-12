@@ -1,4 +1,4 @@
-namespace Lexicora.Domain.Contracts.Block.Content;
+namespace Lexicora.Domain.Contracts.BlockNote.Content;
 
 /// <summary>
 /// Interface for block content.

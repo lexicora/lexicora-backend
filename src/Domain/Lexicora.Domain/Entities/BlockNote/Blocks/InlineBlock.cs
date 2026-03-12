@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-using Lexicora.Domain.Entities.Block.Content.Inline;
+using Lexicora.Domain.Entities.BlockNote.Content.Inline;
 
-namespace Lexicora.Domain.Entities.Block.Blocks;
+namespace Lexicora.Domain.Entities.BlockNote.Blocks;
 
 /// <summary>
 /// Inline block type, derives from <see cref="BlockBase"/>.

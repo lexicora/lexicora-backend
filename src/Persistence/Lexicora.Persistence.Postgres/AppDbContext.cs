@@ -1,5 +1,4 @@
 using Lexicora.Domain.Entities;
-using Lexicora.Domain.Entities.Block.Blocks;
 using Lexicora.Persistence.Postgres.Schema;
 
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Entry> Entries => Set<Entry>();
-    public DbSet<BlockBase> Blocks => Set<BlockBase>();
+    public DbSet<Block> Blocks => Set<Block>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

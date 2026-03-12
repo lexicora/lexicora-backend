@@ -5,18 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Entities\Block\NewFolder\**" />
-    <EmbeddedResource Remove="Entities\Block\NewFolder\**" />
-    <None Remove="Entities\Block\NewFolder\**" />
+    <Compile Remove="Entities\BlockNote\NewFolder\**" />
+    <EmbeddedResource Remove="Entities\BlockNote\NewFolder\**" />
+    <None Remove="Entities\BlockNote\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Ulid" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\Block\Content\Inline\" />
-    <Folder Include="Entities\Block\Content\Table\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-namespace Lexicora.Domain.Constants;
+namespace Lexicora.Domain.Constants.Block;
 
 /// <summary>Property values used in content blocks and inline elements. (usually in Props property)</summary>
 public static class PropValues

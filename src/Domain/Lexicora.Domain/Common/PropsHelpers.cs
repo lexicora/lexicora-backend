@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-using Lexicora.Domain.Constants;
+using Lexicora.Domain.Constants.Block;
 
 namespace Lexicora.Domain.Common;
 

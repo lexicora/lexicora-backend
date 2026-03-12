@@ -43,7 +43,7 @@ public class Program
         });
 
         // Configure the database connection and register the data source as a singleton
-        var connectionString = builder.Configuration.GetConnectionString("Default");
+        var connectionString = builder.Configuration.GetConnectionString("Postgres");
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
         var dataSource = dataSourceBuilder.Build();

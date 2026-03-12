@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Lexicora.Domain.Constants;
+using Lexicora.Domain.Constants.Block;
 
-namespace Lexicora.Domain.Entities.Block.Blocks;
+namespace Lexicora.Domain.Entities.BlockNote.Blocks;
 
 /// <summary>
 /// Base class of the Block entity.

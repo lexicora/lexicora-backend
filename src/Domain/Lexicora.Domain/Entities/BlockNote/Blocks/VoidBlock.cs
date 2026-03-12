@@ -1,4 +1,4 @@
-namespace Lexicora.Domain.Entities.Block.Blocks;
+namespace Lexicora.Domain.Entities.BlockNote.Blocks;
 
 /// <summary>
 /// Essentially the exact same as the base class <see cref="BlockBase"/>, but as instantiatable Block entity, for Blocks like Embeds or the Divider Block.

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Lexicora.Domain.Entities.Block.Content.Inline;
+namespace Lexicora.Domain.Entities.BlockNote.Content.Inline;
 
 //Use this if the json behavior below is not needed
 #region Not used

@@ -1,4 +1,4 @@
-namespace Lexicora.Domain.Constants;
+namespace Lexicora.Domain.Constants.Block;
 
 /// <summary>Property names used in content blocks and inline elements. (usually in Props property)</summary>
 public static class PropNames

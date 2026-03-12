@@ -1,9 +1,9 @@
 using System.Text.Json;
 
-using Lexicora.Domain.Constants;
-using Lexicora.Domain.Entities.Block.Content.Inline;
+using Lexicora.Domain.Constants.Block;
+using Lexicora.Domain.Entities.BlockNote.Content.Inline;
 
-namespace Lexicora.Domain.Entities.Block.Content.Table;
+namespace Lexicora.Domain.Entities.BlockNote.Content.Table;
 
 /// <summary>
 /// Represents a cell within a table row, containing inline content.

@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
 
-using Lexicora.Domain.Constants;
-using Lexicora.Domain.Contracts.Block.Content;
+using Lexicora.Domain.Constants.Block;
+using Lexicora.Domain.Contracts.BlockNote.Content;
 
-namespace Lexicora.Domain.Entities.Block.Content.Inline;
+namespace Lexicora.Domain.Entities.BlockNote.Content.Inline;
 
 /// <summary>
 /// Inline content base class.
