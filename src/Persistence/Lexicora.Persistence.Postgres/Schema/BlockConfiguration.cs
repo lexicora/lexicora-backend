@@ -35,6 +35,12 @@ public class BlockConfiguration : IEntityTypeConfiguration<Block>
             .HasColumnName("order")
             .IsRequired();
 
+        builder.Property(b => b.Type)
+            .HasColumnName("type")
+            .HasMaxLength(50) // Maybe increase later.
+            .IsUnicode()
+            .IsRequired();
+
         builder.Property(b => b.PropsJson)
             .HasColumnName("props_json")
             .HasColumnType("jsonb")

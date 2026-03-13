@@ -62,7 +62,7 @@ public class Program
                 options.EnableSensitiveDataLogging();
                 options.EnableDetailedErrors();
             }
-        });
+        }/*, poolSize: 1024 default size*/);
 
         var app = builder.Build();
 

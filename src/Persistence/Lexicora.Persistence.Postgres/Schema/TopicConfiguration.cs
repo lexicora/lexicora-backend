@@ -48,7 +48,9 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .IsRequired();
 
         builder.Property(t => t.CreatedAt)
-            .HasColumnName("created_at");
+            .HasColumnName("created_at")
+            .HasDefaultValueSql("now()")
+            .IsRequired();
 
         builder.Property(t => t.UpdatedAt)
             .HasColumnName("updated_at");
@@ -64,10 +66,11 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
-        builder.HasMany(t => t.Entries)
-            .WithOne(e => e.Topic)
-            .HasForeignKey(e => e.TopicId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+        // Defined in the EntryConfiguration to avoid circular reference issues
+        //builder.HasMany(t => t.Entries)
+        //    .WithOne(e => e.Topic)
+        //    .HasForeignKey(e => e.TopicId)
+        //    .OnDelete(DeleteBehavior.Cascade)
+        //    .IsRequired();
     }
 }

@@ -7,7 +7,7 @@ public class Block
     public Guid? ParentBlockId { get; set; }
 
     public double Order { get; set; }
-    public string Type { get; set; } = string.Empty; // Part of actual BlockNote schema.
+    public required string Type { get; set; } = string.Empty; // Part of actual BlockNote schema.
     public string PropsJson { get; set; } = "{}"; // Part of actual BlockNote schema.
     public string? ContentJson { get; set; } // Part of actual BlockNote schema.
 

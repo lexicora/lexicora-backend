@@ -81,6 +81,7 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
+            .HasDefaultValueSql("now()")
             .IsRequired();
 
         builder.Property(e => e.UpdatedAt)
@@ -116,11 +117,12 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
-        builder.HasMany(e => e.Blocks)
-            .WithOne(b => b.Entry)
-            .HasForeignKey(b => b.EntryId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+        // Defined in the BlockConfiguration to avoid circular reference issues, but can be defined here if needed
+        //builder.HasMany(e => e.Blocks)
+        //    .WithOne(b => b.Entry)
+        //    .HasForeignKey(b => b.EntryId)
+        //    .OnDelete(DeleteBehavior.Cascade)
+        //    .IsRequired();
 
         // TODO: Optimize queries with indexes if needed
     }

@@ -21,6 +21,9 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName("id")
             .ValueGeneratedNever();
 
+        builder.HasIndex(u => u.Email).IsUnique();
+        builder.HasIndex(u => u.Username).IsUnique();
+
         builder.Property(u => u.Email)
             .HasColumnName("email")
             .HasMaxLength(255)
@@ -50,21 +53,35 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(200)
             .IsUnicode();
 
+        builder.Property(u => u.CreatedAt)
+            .HasColumnName("created_at")
+            .HasDefaultValueSql("now()")
+            .IsRequired();
+
+        builder.Property(u => u.UpdatedAt)
+            .HasColumnName("updated_at");
+
         builder.Property(u => u.EntryCount)
             .HasColumnName("entry_count")
             .HasDefaultValue(0)
             .IsRequired();
 
-        builder.HasMany(u => u.Topics)
-            .WithOne(t => t.User)
-            .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
+        builder.Property(u => u.TopicCount)
+            .HasColumnName("topic_count")
+            .HasDefaultValue(0)
             .IsRequired();
 
-        builder.HasMany(u => u.Entries)
-            .WithOne(e => e.User)
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+        // Defined relationships in the Topic and Entry configurations to avoid circular dependencies. Cascade delete is configured there as well.
+        //builder.HasMany(u => u.Topics)
+        //    .WithOne(t => t.User)
+        //    .HasForeignKey(t => t.UserId)
+        //    .OnDelete(DeleteBehavior.Cascade)
+        //    .IsRequired();
+
+        //builder.HasMany(u => u.Entries)
+        //    .WithOne(e => e.User)
+        //    .HasForeignKey(e => e.UserId)
+        //    .OnDelete(DeleteBehavior.Cascade)
+        //    .IsRequired();
     }
 }
