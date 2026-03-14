@@ -5,9 +5,7 @@ namespace Lexicora.Api.Features.Topics.GetTopicById;
 public static class GetTopicByIdMappers
 {
     //extension (Topic topic) {}
-    public static GetTopicByIdResponse MapToResponse(this Topic topic)
-    {
-        return new GetTopicByIdResponse(
+    public static GetTopicByIdResponse MapToResponse(this Topic topic) => new(
             new Ulid(topic.Id),
             topic.Name,
             topic.Description,
@@ -17,5 +15,4 @@ public static class GetTopicByIdMappers
             topic.UpdatedAt,
             topic.EntryCount
         );
-    }
 }

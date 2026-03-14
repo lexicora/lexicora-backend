@@ -1,0 +1,29 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Lexicora.Api.Infrastructure.Filters;
+
+public class ValidationFilter<T> : IEndpointFilter where T : class
+{
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
+    {
+        var argToValidate = context.Arguments.OfType<T>().FirstOrDefault();
+        if (argToValidate is null) return await next(context);
+
+        var validationResults = new List<ValidationResult>();
+        var validationContext = new ValidationContext(argToValidate);
+
+        bool isValid = Validator.TryValidateObject(argToValidate, validationContext, validationResults, true);
+
+        if (!isValid)
+        {
+            var errors = validationResults
+                .GroupBy(e => e.MemberNames.FirstOrDefault() ?? string.Empty, e => e.ErrorMessage ?? string.Empty)
+                .ToDictionary(g => g.Key, g => g.ToArray());
+
+            // Returns a 400 Bad Request gracefully. Nothing is written to the Error logs.
+            return TypedResults.ValidationProblem(errors);
+        }
+
+        return await next(context);
+    }
+}

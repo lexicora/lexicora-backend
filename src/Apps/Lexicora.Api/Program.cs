@@ -44,6 +44,7 @@ public class Program
             // Maybe implement source generator that iterates through all contexts and lists them here.
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(1, TopicsJsonContext.Default);
+            options.SerializerOptions.TypeInfoResolverChain.Insert(2, UsersJsonContext.Default);
         });
 
         // Maybe add later if needed manual mapping might be slightly slower, but is clearer.
