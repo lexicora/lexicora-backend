@@ -1,6 +1,5 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Features.Topics.GetTopicById;
-using Lexicora.Api.Infrastructure.Filters;
 
 using Scalar.AspNetCore;
 
@@ -13,8 +12,8 @@ public class TopicsConfiguration : IEndpointConfiguration
         var topicsGroup = builder.MapGroup("/topics")
             .WithTags("Topics")
             .WithDescription("Endpoints for managing and retrieving topic data.")
-            .WithBadge("Topics", color: "blue")
-            .AddEndpointFilter<UlidIdValidationFilter>();
+            .WithBadge("Topics", color: "blue");
+        //.AddEndpointFilter<UlidIdValidationFilter>();
 
         GetTopicByIdEndpoint.Map(topicsGroup);
     }

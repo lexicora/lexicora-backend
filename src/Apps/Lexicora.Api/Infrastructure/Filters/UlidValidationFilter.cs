@@ -16,7 +16,9 @@ public class UlidIdValidationFilter : IEndpointFilter
             {
                 // 3. Return TypedResults for Source Gen compatibility.
                 return TypedResults.Problem(
-                    //type: "https://example.com/probs/invalid-id-format", // Custom type URI for documentation
+                    type: "https://example.com/probs/invalid-id-format", // Custom type URI for documentation,
+                                                                         // potential sites to put in type: "https://api.lexicora.com/errors/invalid-identifier",
+                                                                         // "https://lexicora.api/errors/bad-request/invalid-ulid"
                     detail: $"The value '{idString}' is not a valid Ulid.",
                     statusCode: StatusCodes.Status400BadRequest,
                     title: "Invalid Identifier Format",
