@@ -9,7 +9,7 @@ public static class GetTopicByIdMappers
     {
         return new GetTopicByIdResponse(
             new Ulid(topic.Id),
-            topic.Title,
+            topic.Name,
             topic.Description,
             topic.IsFavorite,
             topic.Tags,

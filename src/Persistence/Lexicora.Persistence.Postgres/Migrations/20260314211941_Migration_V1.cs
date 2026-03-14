@@ -63,7 +63,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 },
-                comment: "Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a title, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
+                comment: "Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
 
             migrationBuilder.CreateTable(
                 name: "entries",

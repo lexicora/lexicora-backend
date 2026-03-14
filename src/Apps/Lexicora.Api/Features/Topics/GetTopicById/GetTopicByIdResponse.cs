@@ -2,7 +2,7 @@ namespace Lexicora.Api.Features.Topics.GetTopicById;
 
 public record GetTopicByIdResponse(
     Ulid Id,
-    string Title,
+    string Name,
     string? Description,
     bool IsFavorite,
     List<string> Tags,

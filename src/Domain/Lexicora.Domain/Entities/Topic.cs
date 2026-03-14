@@ -5,7 +5,7 @@ public class Topic
     public Guid Id { get; set; } = Ulid.NewUlid().ToGuid(); // Faster than Guid.CreateVersion7()
     public Guid UserId { get; set; }
 
-    public string Title { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public bool IsFavorite { get; set; } = false;
     public List<string> Tags { get; set; } = [];

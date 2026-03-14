@@ -17,12 +17,12 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasKey(u => u.Id);
 
+        builder.HasIndex(u => u.Email).IsUnique();
+        builder.HasIndex(u => u.Username).IsUnique();
+
         builder.Property(u => u.Id)
             .HasColumnName("id")
             .ValueGeneratedNever();
-
-        builder.HasIndex(u => u.Email).IsUnique();
-        builder.HasIndex(u => u.Username).IsUnique();
 
         builder.Property(u => u.Email)
             .HasColumnName("email")

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lexicora.Persistence.Postgres.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260314115520_Migration_V1")]
+    [Migration("20260314211941_Migration_V1")]
     partial class Migration_V1
     {
         /// <inheritdoc />
@@ -218,18 +218,18 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_favorite");
 
-                    b.PrimitiveCollection<List<string>>("Tags")
-                        .IsRequired()
-                        .IsUnicode(true)
-                        .HasColumnType("text[]")
-                        .HasColumnName("tags");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .IsUnicode(true)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
+
+                    b.PrimitiveCollection<List<string>>("Tags")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("text[]")
+                        .HasColumnName("tags");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -245,7 +245,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
 
                     b.ToTable("topics", "public", t =>
                         {
-                            t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a title, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
+                            t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
                         });
                 });
 

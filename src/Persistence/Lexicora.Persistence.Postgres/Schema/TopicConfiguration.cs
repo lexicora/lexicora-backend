@@ -12,7 +12,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
         builder.ToTable("topics", "public", t =>
         {
             // Maybe change this to a code comment only
-            t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a title, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
+            t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
         }); // public For Supabase configuration
 
         builder.HasKey(t => t.Id);
@@ -25,7 +25,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .HasColumnName("user_id")
             .IsRequired();
 
-        builder.Property(t => t.Title)
+        builder.Property(t => t.Name)
             .HasColumnName("name")
             .HasMaxLength(200)
             .IsUnicode()
