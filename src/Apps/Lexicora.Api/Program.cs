@@ -1,3 +1,5 @@
+using Dapper;
+
 using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Json.Contexts;
 using Lexicora.Persistence.Postgres;
@@ -9,7 +11,7 @@ using Npgsql;
 using Scalar.AspNetCore;
 
 // Tells Dapper.AOT to generate interceptors for the API assembly
-//[module: DapperAot]
+[module: DapperAot]
 
 namespace Lexicora.Api;
 
@@ -43,6 +45,9 @@ public class Program
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(1, TopicsJsonContext.Default);
         });
+
+        // Maybe add later if needed manual mapping might be slightly slower, but is clearer.
+        //SqlMapper.AddTypeHandler(new UlidTypeHandler());
 
         // Configure the database connection and register the data source as a singleton
         var connectionString = builder.Configuration.GetConnectionString("Postgres");
@@ -91,5 +96,8 @@ public class Program
         app.MapConfiguredEndpoints();
 
         app.Run();
+
+        // TODO: Add cors configuration if needed, maybe with a policy that can be applied to specific endpoints.
+        // TODO: Potentially add global error handling middleware, logging, etc.
     }
 }

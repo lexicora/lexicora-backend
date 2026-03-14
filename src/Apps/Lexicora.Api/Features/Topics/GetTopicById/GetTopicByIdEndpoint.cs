@@ -1,9 +1,12 @@
+using Dapper;
+
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Extensions;
-using Lexicora.Persistence.Postgres;
+using Lexicora.Domain.Entities;
 
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+
+using Npgsql;
 
 using Scalar.AspNetCore;
 
@@ -24,25 +27,35 @@ public class GetTopicByIdEndpoint : IEndpoint
             .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
     }
 
-    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound, ProblemHttpResult>> HandleAsync(string id, AppDbContext dbContext)
+    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound, ProblemHttpResult>> HandleAsync(
+        string id, NpgsqlDataSource dataSource)
     {
         if (!id.TryParseRouteId(out var ulid, out var error))
             return error;
 
-        var topic = await dbContext.Topics.AsNoTracking().FirstOrDefaultAsync(t => t.Id == ulid.ToGuid());
+        await using var connection = await dataSource.OpenConnectionAsync();
 
-        return topic is not null
-            ? TypedResults.Ok(topic.MapToResponse())
+        const string sql = """
+                           SELECT 
+                               id AS "Id",
+                               name AS "Name", 
+                               description AS "Description",
+                               is_favorite AS "IsFavorite",
+                               tags AS "Tags",
+                               created_at AS "CreatedAt", 
+                               updated_at AS "UpdatedAt",
+                               entry_count AS "EntryCount"
+                           FROM "public"."topics"
+                           WHERE id = @Id
+                           """;
+
+        var response = await connection.QueryFirstOrDefaultAsync<Topic>(
+            sql,
+            new { Id = ulid.ToGuid() } // Pass the parsed GUID as a safe SQL parameter
+        );
+
+        return response is not null
+            ? TypedResults.Ok(response.MapToResponse())
             : TypedResults.NotFound();
     }
-
-    //private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound>> HandleAsync(string id, AppDbContext dbContext)
-    //{
-    //    var ulid = Ulid.Parse(id); // This should never throw because of the validation filter.
-    //    var topic = await dbContext.Topics.AsNoTracking().FirstOrDefaultAsync(t => t.Id == ulid.ToGuid());
-
-    //    return topic is not null
-    //        ? TypedResults.Ok(topic.MapToResponse())
-    //        : TypedResults.NotFound();
-    //}
 }
