@@ -1,5 +1,6 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Features.Topics.GetTopicById;
+using Lexicora.Api.Infrastructure.Filters;
 
 using Scalar.AspNetCore;
 
@@ -10,13 +11,10 @@ public class TopicsConfiguration : IEndpointConfiguration
     public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var topicsGroup = builder.MapGroup("/topics")
-            .WithGroupName("Topics Group")
-            .WithName("Topics")
-            .WithDisplayName("Topics")
-            .WithTags("Topics", "Topic")
-            .WithSummary("Topics endpoints.")
-            .WithDescription("Topics endpoints.")
-            .WithBadge("Topics", color: "blue");
+            .WithTags("Topics")
+            .WithDescription("Endpoints for managing and retrieving topic data.")
+            .WithBadge("Topics", color: "blue")
+            .AddEndpointFilter<UlidIdValidationFilter>();
 
         GetTopicByIdEndpoint.Map(topicsGroup);
     }

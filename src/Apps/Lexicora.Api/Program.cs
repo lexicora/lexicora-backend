@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization.Metadata;
-
 using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Json.Contexts;
 using Lexicora.Persistence.Postgres;
@@ -33,13 +31,17 @@ public class Program
         // Register source generated JSON contexts
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
-            var combinedResolver = JsonTypeInfoResolver.Combine(
-                AppJsonContext.Default
-            //WeatherForecastJsonContext.Default
-            );
+            //var combinedResolver = JsonTypeInfoResolver.Combine(
+            //    AppJsonContext.Default
+            //    WeatherForecastJsonContext.Default
+            //);
 
-            options.SerializerOptions.TypeInfoResolverChain.Insert(0, combinedResolver);
+            //options.SerializerOptions.TypeInfoResolverChain.Insert(0, combinedResolver);
             // Alternatively, you can set the TypeInfoResolver directly if you don't have other resolvers to combine.
+
+            // Maybe implement source generator that iterates through all contexts and lists them here.
+            options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
+            options.SerializerOptions.TypeInfoResolverChain.Insert(1, TopicsJsonContext.Default);
         });
 
         // Configure the database connection and register the data source as a singleton

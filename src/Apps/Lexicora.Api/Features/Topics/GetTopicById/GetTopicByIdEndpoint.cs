@@ -2,6 +2,7 @@ using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 using Scalar.AspNetCore;
 
@@ -21,9 +22,10 @@ public class GetTopicByIdEndpoint : IEndpoint
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound>> HandleAsync(Ulid id, AppDbContext dbContext)
+    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound>> HandleAsync(string id, AppDbContext dbContext)
     {
-        var topic = await dbContext.Topics.FindAsync(id.ToGuid());
+        var ulid = Ulid.Parse(id); // This should never throw because of the validation filter.
+        var topic = await dbContext.Topics.AsNoTracking().FirstOrDefaultAsync(t => t.Id == ulid.ToGuid());
 
         return topic is not null
             ? TypedResults.Ok(topic.MapToResponse())
