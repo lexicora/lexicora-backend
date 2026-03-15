@@ -4,6 +4,7 @@ namespace Lexicora.Api.Infrastructure.Filters;
 
 public class ValidationFilter<T> : IEndpointFilter where T : class
 {
+    // TODO: Debug this method to potentially figure out why no custom message is returned.
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         var argToValidate = context.Arguments.OfType<T>().FirstOrDefault();
