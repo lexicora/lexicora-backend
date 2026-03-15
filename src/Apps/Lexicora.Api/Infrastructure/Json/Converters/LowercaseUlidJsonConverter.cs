@@ -66,11 +66,16 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
         Span<char> buf = stackalloc char[26];
         value.TryWriteStringify(buf);
 
-        // Convert to lowercase without heap allocation (added code compared to original)
-        // Also improvement compared to original for loop implementation of the modification, in terms of performance
-        // Same as: MemoryExtensions.ToLowerInvariant(buf, buf);
-        buf.ToLowerInvariant(buf);
-
+        // We only care about A-Z. In ASCII/UTF-16, 
+        // adding 32 (or OR-ing with 0x20) converts Upper to Lower.
+        for (int i = 0; i < buf.Length; i++)
+        {
+            // Fast because of CPU branch prediction and the fact that most characters will be digits (0-9) or uppercase letters (A-Z).
+            if (buf[i] >= 'A' && buf[i] <= 'Z')
+            {
+                buf[i] = ( char )( buf[i] | 0x20 );
+            }
+        }
 
         // Write the lowercase string to the JSON writer
         writer.WriteStringValue(buf);
