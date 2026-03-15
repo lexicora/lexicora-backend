@@ -19,9 +19,9 @@ public static class UlidExtensions
 
         // Returns RFC 7807 compliant problem details
         error = TypedResults.Problem(
-            type: "https://example.com/probs/invalid-id-format", // Custom type URI for documentation,
-                                                                 // potential sites to put in type: "https://api.lexicora.com/errors/invalid-identifier",
-                                                                 // "https://lexicora.api/errors/bad-request/invalid-ulid"
+            //type: "https://example.com/probs/invalid-id-format", // Custom type URI for documentation,
+            // potential sites to put in type: "https://api.lexicora.com/errors/invalid-identifier",
+            // "https://lexicora.api/errors/bad-request/invalid-ulid"
             detail: $"The value '{id}' is not a valid Ulid.",
             statusCode: StatusCodes.Status400BadRequest,
             title: "Invalid Identifier",
