@@ -47,14 +47,13 @@ public class CreateUserEndpoint : IEndpoint
             });
         }
 
-        var ulid = Ulid.NewUlid();
-        var user = request.MapToEntity(ulid);
+        var user = request.MapToEntity();
 
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         var response = user.MapToResponse(); // maybe pass ulid as parameter
-        if (response.Id != ulid) throw new InvalidOperationException("The mapped response Id does not match the generated ULID.");
+        //if (response.Id != new Ulid(user.Id)) throw new InvalidOperationException("The mapped response Id does not match the generated ULID.");
 
         return TypedResults.Created($"/users/{user.Id}", response);
     }
