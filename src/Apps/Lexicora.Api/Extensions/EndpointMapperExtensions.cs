@@ -1,4 +1,5 @@
 using Lexicora.Api.Features.Topics;
+using Lexicora.Api.Features.Users;
 
 namespace Lexicora.Api.Extensions;
 
@@ -12,5 +13,6 @@ public static class EndpointMapperExtensions
     {
         // Add the endpoints that implement IEndpointConfiguration here
         TopicsConfiguration.MapEndpoints(baseAppRoute);
+        UsersConfiguration.MapEndpoints(baseAppRoute);
     }
 }

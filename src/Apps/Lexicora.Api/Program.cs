@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Dapper;
 
 using Lexicora.Api.Extensions;
@@ -33,6 +35,10 @@ public class Program
         // Register source generated JSON contexts
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
+            options.SerializerOptions.AllowTrailingCommas = true;
+            //options.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow; // already default behavior
+            //options.SerializerOptions.MaxDepth = 32; // default is 64, adjust if necessary
+
             //var combinedResolver = JsonTypeInfoResolver.Combine(
             //    AppJsonContext.Default
             //    WeatherForecastJsonContext.Default
@@ -44,6 +50,33 @@ public class Program
             // Maybe implement source generator that iterates through all contexts and lists them here.
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(1, TopicsJsonContext.Default);
+            options.SerializerOptions.TypeInfoResolverChain.Insert(2, UsersJsonContext.Default);
+        });
+
+        builder.Services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Extensions.Remove("traceId");
+                //context.ProblemDetails.Extensions.Remove("requestId");
+
+                // Check if the error is specifically a bad JSON request
+                if (context.Exception is BadHttpRequestException badRequestEx)
+                {
+                    context.ProblemDetails.Title = "Invalid Request Content";
+                    context.ProblemDetails.Status = StatusCodes.Status400BadRequest;
+                    context.ProblemDetails.Detail = "The provided JSON is malformed and could not be parsed.";
+
+                    // Optional: In Development, show the specific JSON error (like the trailing comma)
+                    // In Production, keep it vague for security.
+#if DEBUG
+                    if (badRequestEx.InnerException is JsonException jsonEx)
+                    {
+                        context.ProblemDetails.Extensions["jsonError"] = jsonEx.Message;
+                    }
+#endif
+                }
+            };
         });
 
         // Maybe add later if needed manual mapping might be slightly slower, but is clearer.
@@ -73,6 +106,8 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseExceptionHandler();
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -85,7 +120,10 @@ public class Program
                     .HideClientButton()
                     .WithTitle("Lexicora API Reference");
             });
+            app.UseDeveloperExceptionPage();
         }
+
+        app.UseStatusCodePages();
 
         app.UseHttpsRedirection();
 
