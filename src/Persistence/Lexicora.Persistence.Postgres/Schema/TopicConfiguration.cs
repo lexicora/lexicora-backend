@@ -13,6 +13,20 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
         {
             // Maybe change this to a code comment only
             t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
+
+            // Enforce max 10 tags per topic
+            t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
+
+            //t.HasCheckConstraint("CK_Tags_MaxMemberLength", "all_elements_len_check(tags, 50)");
+            // IMPORTANT: Run following sql in the db before using this!
+            /*
+               CREATE OR REPLACE FUNCTION all_elements_len_check(arr text[], max_len int)
+               RETURNS boolean AS $$
+               BEGIN
+                 RETURN NOT EXISTS (SELECT 1 FROM unnest(arr) s WHERE length(s) > max_len);
+               END;
+               $$ LANGUAGE plpgsql IMMUTABLE;
+             */
         }); // public For Supabase configuration
 
         builder.HasKey(t => t.Id);
@@ -36,10 +50,10 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .HasMaxLength(1000)
             .IsUnicode();
 
-        // TODO: Maybe add default value for this and MaxLength?
         builder.Property(t => t.Tags)
             .HasColumnName("tags")
             .HasColumnType("text[]")
+            .HasDefaultValueSql("'{}'") // Default to an empty array
             .IsUnicode()
             .IsRequired();
 

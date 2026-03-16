@@ -13,6 +13,20 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
         {
             // Maybe change this to a code comment only
             e.HasComment("Represents a saved web page or article with metadata and content blocks.");
+
+            // Enforce max 10 tags per entry
+            e.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
+
+            //e.HasCheckConstraint("CK_Tags_MaxMemberLength", "all_elements_len_check(tags, 50)");
+            // IMPORTANT: Run following sql in the db before using this!
+            /*
+               CREATE OR REPLACE FUNCTION all_elements_len_check(arr text[], max_len int)
+               RETURNS boolean AS $$
+               BEGIN
+                 RETURN NOT EXISTS (SELECT 1 FROM unnest(arr) s WHERE length(s) > max_len);
+               END;
+               $$ LANGUAGE plpgsql IMMUTABLE;
+             */
         }); // public For Supabase configuration
 
         builder.HasKey(e => e.Id);
@@ -31,7 +45,7 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
         builder.Property(e => e.Title)
             .HasColumnName("title")
-            .HasMaxLength(500)
+            .HasMaxLength(500) // Maybe increase this to 1000 if needed, but 500 should be enough for most titles
             .IsUnicode()
             .IsRequired();
 
@@ -45,10 +59,10 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .HasMaxLength(1000)
             .IsUnicode();
 
-        // TODO: Maybe add default value for this and MaxLength?
         builder.Property(e => e.Tags)
             .HasColumnName("tags")
             .HasColumnType("text[]")
+            .HasDefaultValueSql("'{}'") // Default to an empty array
             .IsUnicode()
             .IsRequired();
 

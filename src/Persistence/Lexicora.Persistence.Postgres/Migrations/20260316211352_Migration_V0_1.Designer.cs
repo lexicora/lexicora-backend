@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lexicora.Persistence.Postgres.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260316204006_Migration_V0_1")]
+    [Migration("20260316211352_Migration_V0_1")]
     partial class Migration_V0_1
     {
         /// <inheritdoc />
@@ -148,9 +148,11 @@ namespace Lexicora.Persistence.Postgres.Migrations
 
                     b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .IsUnicode(true)
                         .HasColumnType("text[]")
-                        .HasColumnName("tags");
+                        .HasColumnName("tags")
+                        .HasDefaultValueSql("'{}'");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -187,6 +189,8 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     b.ToTable("entries", "public", t =>
                         {
                             t.HasComment("Represents a saved web page or article with metadata and content blocks.");
+
+                            t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
                         });
                 });
 
@@ -222,16 +226,18 @@ namespace Lexicora.Persistence.Postgres.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(255)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(200)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
                     b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .IsUnicode(true)
                         .HasColumnType("text[]")
-                        .HasColumnName("tags");
+                        .HasColumnName("tags")
+                        .HasDefaultValueSql("'{}'");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -248,6 +254,8 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     b.ToTable("topics", "public", t =>
                         {
                             t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
+
+                            t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
                         });
                 });
 
@@ -264,9 +272,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("DisplayName")
-                        .HasMaxLength(200)
+                        .HasMaxLength(255)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(200)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("display_name");
 
                     b.Property<string>("Email")
@@ -284,16 +292,16 @@ namespace Lexicora.Persistence.Postgres.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
+                        .HasMaxLength(150)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
+                        .HasMaxLength(150)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("last_name");
 
                     b.Property<int>("TopicCount")

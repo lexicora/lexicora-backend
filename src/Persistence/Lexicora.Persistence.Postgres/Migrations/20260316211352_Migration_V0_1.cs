@@ -24,9 +24,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    first_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    last_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    display_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    first_name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    last_name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    display_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     entry_count = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
@@ -45,10 +45,10 @@ namespace Lexicora.Persistence.Postgres.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     is_favorite = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    tags = table.Column<List<string>>(type: "text[]", nullable: false),
+                    tags = table.Column<List<string>>(type: "text[]", nullable: false, defaultValueSql: "'{}'"),
                     created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     entry_count = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
@@ -56,6 +56,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_topics", x => x.id);
+                    table.CheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
                     table.ForeignKey(
                         name: "FK_topics_users_user_id",
                         column: x => x.user_id,
@@ -76,7 +77,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     topic_id = table.Column<Guid>(type: "uuid", nullable: false),
                     title = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    tags = table.Column<List<string>>(type: "text[]", nullable: false),
+                    tags = table.Column<List<string>>(type: "text[]", nullable: false, defaultValueSql: "'{}'"),
                     is_favorite = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     favicon_url = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     url = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
@@ -93,6 +94,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_entries", x => x.id);
+                    table.CheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
                     table.ForeignKey(
                         name: "FK_entries_topics_topic_id",
                         column: x => x.topic_id,
