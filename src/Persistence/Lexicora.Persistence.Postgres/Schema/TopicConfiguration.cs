@@ -27,7 +27,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 
         builder.Property(t => t.Name)
             .HasColumnName("name")
-            .HasMaxLength(200)
+            .HasMaxLength(255)
             .IsUnicode()
             .IsRequired();
 
@@ -36,6 +36,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .HasMaxLength(1000)
             .IsUnicode();
 
+        // TODO: Maybe add default value for this and MaxLength?
         builder.Property(t => t.Tags)
             .HasColumnName("tags")
             .HasColumnType("text[]")

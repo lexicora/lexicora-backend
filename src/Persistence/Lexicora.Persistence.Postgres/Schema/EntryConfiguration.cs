@@ -37,7 +37,7 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
         builder.Property(e => e.Description)
             .HasColumnName("description")
-            .HasMaxLength(500)
+            .HasMaxLength(1000)
             .IsUnicode();
 
         builder.Property(e => e.FaviconUrl)
@@ -45,6 +45,7 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .HasMaxLength(1000)
             .IsUnicode();
 
+        // TODO: Maybe add default value for this and MaxLength?
         builder.Property(e => e.Tags)
             .HasColumnName("tags")
             .HasColumnType("text[]")

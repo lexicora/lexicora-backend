@@ -38,19 +38,19 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.FirstName)
             .HasColumnName("first_name")
-            .HasMaxLength(100)
+            .HasMaxLength(150)
             .IsUnicode()
             .IsRequired();
 
         builder.Property(u => u.LastName)
             .HasColumnName("last_name")
-            .HasMaxLength(100)
+            .HasMaxLength(150)
             .IsUnicode()
             .IsRequired();
 
         builder.Property(u => u.DisplayName)
             .HasColumnName("display_name")
-            .HasMaxLength(200)
+            .HasMaxLength(255)
             .IsUnicode();
 
         builder.Property(u => u.CreatedAt)

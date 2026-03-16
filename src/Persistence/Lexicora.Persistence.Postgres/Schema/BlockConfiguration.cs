@@ -44,6 +44,7 @@ public class BlockConfiguration : IEntityTypeConfiguration<Block>
         builder.Property(b => b.PropsJson)
             .HasColumnName("props_json")
             .HasColumnType("jsonb")
+            .HasDefaultValueSql("'{}'") // Default to an empty JSON object had: ("'{}'::jsonb")
             .IsRequired();
 
         builder.Property(b => b.ContentJson)

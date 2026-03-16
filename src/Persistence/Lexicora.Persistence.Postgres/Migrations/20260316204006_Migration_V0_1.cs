@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Lexicora.Persistence.Postgres.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_V1 : Migration
+    public partial class Migration_V0_1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,7 +75,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     topic_id = table.Column<Guid>(type: "uuid", nullable: false),
                     title = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     tags = table.Column<List<string>>(type: "text[]", nullable: false),
                     is_favorite = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     favicon_url = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
@@ -119,8 +120,8 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     parent_block_id = table.Column<Guid>(type: "uuid", nullable: true),
                     order = table.Column<double>(type: "double precision", nullable: false),
                     type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    props_json = table.Column<string>(type: "jsonb", nullable: false),
-                    content_json = table.Column<string>(type: "jsonb", nullable: true)
+                    props_json = table.Column<JsonElement>(type: "jsonb", nullable: false, defaultValueSql: "'{}'"),
+                    content_json = table.Column<JsonElement>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {

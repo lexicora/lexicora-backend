@@ -1,3 +1,7 @@
+using System.Text.Json;
+
+using Lexicora.Domain.Serialization;
+
 namespace Lexicora.Domain.Entities;
 
 public class Block
@@ -8,8 +12,8 @@ public class Block
 
     public double Order { get; set; }
     public required string Type { get; set; } = string.Empty; // Part of actual BlockNote schema.
-    public string PropsJson { get; set; } = "{}"; // Part of actual BlockNote schema.
-    public string? ContentJson { get; set; } // Part of actual BlockNote schema.
+    public JsonElement PropsJson { get; set; } = "{}".ToJsonElement(/*DomainJsonContext.Default.String*/); // enable context if needed // Part of actual BlockNote schema.
+    public JsonElement? ContentJson { get; set; } // Part of actual BlockNote schema.
 
 
     // Navigation
