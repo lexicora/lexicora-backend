@@ -3,23 +3,23 @@ using System.ComponentModel.DataAnnotations;
 namespace Lexicora.Api.Features.Users.CreateUser;
 
 public record CreateUserRequest(
-    [Required]
-    [EmailAddress]
-    [MaxLength(255)]
+    [property: Required]
+    [property: EmailAddress]
+    [property: MaxLength(255)]
     string Email,
 
-    [Required]
-    [RegularExpression("^[a-zA-Z0-9_.-]+$", ErrorMessage = "Username can only contain letters, numbers, underscores, dots, and hyphens.")]
-    [StringLength(30, MinimumLength = 3)]
+    [property: Required]
+    [property: RegularExpression("^[a-zA-Z0-9_.-]+$", ErrorMessage = "Username can only contain letters, numbers, underscores, dots, and hyphens.")]
+    [property: StringLength(30, MinimumLength = 3)]
     string Username,
 
-    [Required]
-    [MaxLength(150)]
+    [property: Required]
+    [property: MaxLength(150)]
     string FirstName,
 
-    [Required]
-    [MaxLength(150)]
+    [property: Required]
+    [property: MaxLength(150)]
     string LastName,
 
-    [MaxLength(200)]
+    [property: MaxLength(200)] // Maybe increase to 255 (db limit).
     string? DisplayName = null);
