@@ -137,6 +137,6 @@ public class Program
         app.Run();
 
         // TODO: Add cors configuration if needed, maybe with a policy that can be applied to specific endpoints.
-        // TODO: Potentially add global error handling middleware, logging, etc.
+        // TODO: Potentially add global error handling middleware, logging, rate limiting etc.
     }
 }

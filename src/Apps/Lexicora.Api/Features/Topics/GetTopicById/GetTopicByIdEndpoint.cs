@@ -27,12 +27,12 @@ public class GetTopicByIdEndpoint : IEndpoint
     }
 
     private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound, ProblemHttpResult>> HandleAsync(
-        string id, NpgsqlDataSource dataSource)
+        string id, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         if (!id.TryParseRouteId(out var ulid, out var error))
             return error;
 
-        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
 
         const string sql = """
                            SELECT 
