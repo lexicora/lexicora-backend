@@ -15,7 +15,7 @@ public class CreateUserEndpoint : IEndpoint
         group.MapPost("/", HandleAsync)
             .WithName("CreateUser")
             .WithTags("Users")
-            .WithSummary("Creates a new user.")
+            .WithSummary("Create new user.")
             .WithDescription(
                 "Creates a new user. The request body must include the required properties for creating a user. Returns the created user on success.")
             .ProducesProblem(StatusCodes.Status400BadRequest)

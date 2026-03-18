@@ -19,7 +19,7 @@ public class GetTopicByIdEndpoint : IEndpoint
         group.MapGet("/{id}", HandleAsync)
             .WithName("GetTopicById")
             .WithTags("Topics")
-            .WithSummary("Gets a topic by id.")
+            .WithSummary("Get topic by id.")
             .WithDescription(
                 "Gets a topic by id. Navigation properties are not included, by default so no dto mapping necessary.") // Supposedly supports markdown and used for extensive documentation.
             .ProducesProblem(StatusCodes.Status400BadRequest)
