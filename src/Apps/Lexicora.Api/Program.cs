@@ -4,6 +4,7 @@ using Dapper;
 
 using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Json.Contexts;
+using Lexicora.Api.Infrastructure.RouteConstraints;
 using Lexicora.Persistence.Postgres;
 
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,11 @@ public class Program
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(1, TopicsJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(2, UsersJsonContext.Default);
+        });
+
+        builder.Services.Configure<RouteOptions>(options =>
+        {
+            options.ConstraintMap.Add("ulid", typeof(UlidConstraint));
         });
 
         builder.Services.AddProblemDetails(options =>
@@ -108,6 +114,19 @@ public class Program
         var app = builder.Build();
 
         app.UseExceptionHandler();
+        //app.UseExceptionHandler(exceptionHandlerApp =>
+        //{
+        //    exceptionHandlerApp.Run(async httpContext =>
+        //    {
+        //        var pds = httpContext.RequestServices.GetService<IProblemDetailsService>();
+        //        if (pds == null
+        //            || !await pds.TryWriteAsync(new ProblemDetailsContext { HttpContext = httpContext }))
+        //        {
+        //            // Fallback behavior
+        //            await httpContext.Response.WriteAsync("Fallback: An error occurred.");
+        //        }
+        //    });
+        //});
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

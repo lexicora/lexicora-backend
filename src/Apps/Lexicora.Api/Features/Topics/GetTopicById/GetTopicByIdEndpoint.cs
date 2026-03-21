@@ -16,7 +16,7 @@ public class GetTopicByIdEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder group)
     {
-        group.MapGet("/{id}", HandleAsync)
+        group.MapGet("/{id:ulid}", HandleAsync)
             .WithName("GetTopicById")
             .WithTags("Topics")
             .WithSummary("Get topic by id.")
@@ -29,8 +29,10 @@ public class GetTopicByIdEndpoint : IEndpoint
     private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound, ProblemHttpResult>> HandleAsync(
         string id, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
-        if (!id.TryParseRouteId(out var ulid, out var error))
-            return error;
+        //if (!id.TryParseRouteId(out var ulid, out var error))
+        //    return error;
+
+        var ulid = Ulid.Parse(id); // Safe, because of the route constraint.
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
 

@@ -1,9 +1,15 @@
+using System.Buffers;
 using System.Runtime.CompilerServices;
 
 namespace Lexicora.Domain.Common;
 
 public static class UlidExtensions
 {
+    // SearchValues is optimized by the JIT/AOT compiler for vectorized searching.
+    // This set specifically excludes I, L, O, and U.
+    private static readonly SearchValues<char> StrictCrockfordChars =
+        SearchValues.Create("0123456789ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz");
+
     extension(Ulid)
     {
         /// <summary>
@@ -11,6 +17,30 @@ public static class UlidExtensions
         /// </summary>
         /// <returns>A new instance of <see cref="MonotonicGenerator"/> that can be used to generate monotonically increasing values.</returns>
         public static MonotonicGenerator CreateMonotonicGenerator() => new();
+
+        /// <summary>
+        /// Validates and parses a ULID string using strict Crockford's Base32 rules.
+        /// Rejects 'I', 'L', 'O', 'U' and enforces the 128-bit overflow limit.
+        /// </summary>
+        public static bool TryParseStrict(ReadOnlySpan<char> input, out Ulid result)
+        {
+            // Precise length check
+            // Overflow check: The first character must be '0'-'7' 
+            // (Because 26 chars at 5-bits each = 130 bits; ULID is only 128 bits)
+            // Character validation: Rejecting aliased or invalid characters
+            if (input.Length == 26 &&
+                input[0] is >= '0' and <= '7' &&
+                !input.ContainsAnyExcept(StrictCrockfordChars))
+            {
+                // Now that we've guaranteed the string is strictly valid,
+                // we let Cysharp handle the high-speed bit-shifting.
+                return Ulid.TryParse(input, out result);
+            }
+
+            result = default;
+            return false;
+        }
+        // Potentially create a PR on GitHub, so that this can be added to the Cysharp library as a built-in method.
     }
 }
 
@@ -41,10 +71,10 @@ public sealed class MonotonicGenerator
 
             if (currentUnixTime > _lastTimestamp)
             {
-                // 1. Generate new ULID with fresh entropy
+                // Generate new ULID with fresh entropy
                 var ulidBytes = Ulid.NewUlid(timeToUse).ToByteArray();
 
-                // 2. Clear the Most Significant Bit (MSB) of the first entropy byte (index 6).
+                // Clear the Most Significant Bit (MSB) of the first entropy byte (index 6).
                 // 0x7F is 01111111 in binary. This ensures we have 2^79 room for increments.
                 ulidBytes[6] &= 0x7F;
 

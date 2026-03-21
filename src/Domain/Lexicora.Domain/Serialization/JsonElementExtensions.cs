@@ -13,7 +13,7 @@ public static class JsonElementExtensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>Value of provided type, given it's correct.</returns>
-        public T? GetValue<T>() => element.Deserialize<T>();
+        public T? As<T>() => element.Deserialize<T>();
 
         /// <summary>
         /// Gets the value of a <see cref="JsonElement"/> in an easy to write way.
@@ -24,7 +24,7 @@ public static class JsonElementExtensions
         /// <typeparam name="T"></typeparam>
         /// <param name="jti">The <see cref="JsonTypeInfo{T}"/> to use for deserialization.</param>
         /// <returns>Value of provided type, given it's correct.</returns>
-        public T? GetValue<T>(JsonTypeInfo<T> jti) => element.Deserialize(jti);
+        public T? As<T>(JsonTypeInfo<T> jti) => element.Deserialize(jti);
     }
 
 
