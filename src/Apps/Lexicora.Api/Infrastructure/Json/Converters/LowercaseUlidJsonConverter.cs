@@ -61,6 +61,15 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
         //{
         //    throw new JsonException("Ulid invalid: invalid format or character", ex);
         //}
+        //catch (Exception ex)
+        //{
+        //    throw ex switch
+        //    {
+        //        IndexOutOfRangeException => new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}", ex),
+        //        OverflowException => new JsonException("Ulid invalid: invalid character", ex),
+        //        _ => new JsonException("Ulid invalid: unexpected error during parsing", ex)
+        //    };
+        //}
     }
 
     /// <inheritdoc/>
