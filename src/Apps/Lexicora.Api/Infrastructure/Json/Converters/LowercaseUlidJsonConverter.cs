@@ -1,83 +1,104 @@
 using System.Buffers;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Lexicora.Api.Infrastructure.Json.Converters;
 
 /// <summary>
-/// JsonConverter for ULID that serializes and deserializes ULIDs as lowercase strings.
+/// A custom JSON converter for the <see cref="Ulid"/> type.
 /// </summary>
 /// <remarks>
-/// Similar to the original implementation by Cysharp, but ensures that the output is always in lowercase.
-/// This might be beneficial for displaying ULIDs in a URL (publicly).
+/// This converter ensures that ULIDs are always serialized as lowercase strings.
+/// It is slightly modified, from the default implementation of ByteAether's implementation, which this is originally derived from.
 /// </remarks>
 public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
 {
-    /// <summary>
-    /// Read a Ulid value represented by a string from JSON.
-    /// </summary>
-    /// <remarks>
-    /// Same as original implementation by Cysharp.
-    /// </remarks>
+    /// <inheritdoc/>
     public override Ulid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         try
         {
-            if (reader.TokenType != JsonTokenType.String) throw new JsonException("Expected string");
+            if (reader.TokenType is not JsonTokenType.String and not JsonTokenType.PropertyName)
+            {
+                throw new JsonException("Expected string or property name");
+            }
 
             if (reader.HasValueSequence)
             {
-                // Parse using ValueSequence
-                var seq = reader.ValueSequence;
-                if (seq.Length != 26) throw new JsonException("Ulid invalid: length must be 26");
-                Span<byte> buf = stackalloc byte[26];
-                seq.CopyTo(buf);
-                Ulid.TryParse(buf, out var ulid);
+                var byteSequence = reader.ValueSequence;
+                if (byteSequence.Length != Ulid.UlidStringLength)
+                {
+                    throw new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}");
+                }
+
+                Span<byte> byteSpan = stackalloc byte[Ulid.UlidStringLength];
+                byteSequence.CopyTo(byteSpan);
+                Ulid.TryParse(byteSpan, null, out var ulid);
                 return ulid;
             }
             else
             {
-                // Parse usign ValueSpan
-                var buf = reader.ValueSpan;
-                if (buf.Length != 26) throw new JsonException("Ulid invalid: length must be 26");
-                Ulid.TryParse(buf, out var ulid);
+                var byteSpan = reader.ValueSpan;
+                if (byteSpan.Length != Ulid.UlidStringLength)
+                {
+                    throw new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}");
+                }
+
+                Ulid.TryParse(byteSpan, null, out var ulid);
                 return ulid;
             }
         }
-        catch (IndexOutOfRangeException e)
+        catch (IndexOutOfRangeException ex)
         {
-            throw new JsonException("Ulid invalid: length must be 26", e);
+            throw new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}", ex);
         }
-        catch (OverflowException e)
+        catch (OverflowException ex)
         {
-            throw new JsonException("Ulid invalid: invalid character", e);
+            throw new JsonException("Ulid invalid: invalid character", ex);
         }
+        //catch (Exception ex) when (ex is IndexOutOfRangeException or OverflowException)
+        //{
+        //    throw new JsonException("Ulid invalid: invalid format or character", ex);
+        //}
+        //catch (Exception ex)
+        //{
+        //    throw ex switch
+        //    {
+        //        IndexOutOfRangeException => new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}", ex),
+        //        OverflowException => new JsonException("Ulid invalid: invalid character", ex),
+        //        _ => new JsonException("Ulid invalid: unexpected error during parsing", ex)
+        //    };
+        //}
     }
 
-    /// <summary>
-    /// Write a Ulid value as a lowercase string to JSON.
-    /// Matches the format used by the Cysharp library.
-    /// </summary>
-    /// <remarks>
-    /// Modified implementation to ensure the output is in lowercase.
-    /// </remarks>
-    public override void Write(Utf8JsonWriter writer, Ulid value, JsonSerializerOptions options)
+    /// <inheritdoc/>
+    public override void Write(Utf8JsonWriter writer, Ulid ulid, JsonSerializerOptions options)
     {
-        Span<char> buf = stackalloc char[26];
-        value.TryWriteStringify(buf);
+        Span<byte> ulidString = stackalloc byte[Ulid.UlidStringLength];
+        ulid.TryFormat(ulidString, out var _, []);
 
-        // We only care about A-Z. In ASCII/UTF-16, 
-        // adding 32 (or OR-ing with 0x20) converts Upper to Lower.
-        for (int i = 0; i < buf.Length; i++)
-        {
-            // Fast because of CPU branch prediction and the fact that most characters will be digits (0-9) or uppercase letters (A-Z).
-            if (buf[i] >= 'A' && buf[i] <= 'Z')
-            {
-                buf[i] = ( char )( buf[i] | 0x20 );
-            }
-        }
+        // Added code, compared to original implementation.
+        Span<byte> lowerBuffer = stackalloc byte[Ulid.UlidStringLength];
+        Ascii.ToLower(ulidString, lowerBuffer, out _);
 
-        // Write the lowercase string to the JSON writer
-        writer.WriteStringValue(buf);
+        writer.WriteStringValue(lowerBuffer);
     }
+
+    /// <inheritdoc/>
+    public override void WriteAsPropertyName(Utf8JsonWriter writer, Ulid ulid, JsonSerializerOptions options)
+    {
+        Span<byte> ulidString = stackalloc byte[Ulid.UlidStringLength];
+        ulid.TryFormat(ulidString, out var _, []);
+
+        // Added code, compared to original implementation.
+        Span<byte> lowerBuffer = stackalloc byte[Ulid.UlidStringLength];
+        Ascii.ToLower(ulidString, lowerBuffer, out _);
+
+        writer.WritePropertyName(ulidString);
+    }
+
+    /// <inheritdoc/>
+    public override Ulid ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        => Read(ref reader, typeToConvert, options);
 }

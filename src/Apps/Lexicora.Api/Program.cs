@@ -24,6 +24,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        Ulid.DefaultGenerationOptions = new Ulid.GenerationOptions
+        {
+            Monotonicity = Ulid.GenerationOptions.MonotonicityOptions.MonotonicRandom4Byte,
+            InitialRandomSource = new CryptographicallySecureRandomProvider(),
+            IncrementRandomSource = new PseudoRandomProvider()
+        };
+
         // Add services to the container.
         builder.Services.AddAuthorization();
 

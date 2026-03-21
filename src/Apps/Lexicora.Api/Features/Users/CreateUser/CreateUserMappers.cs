@@ -6,7 +6,7 @@ public static class CreateUserMappers
 {
     public static User MapToEntity(this CreateUserRequest request /*Ulid ulid*/) => new()
     {
-        Id = Ulid.NewUlid().ToGuid(),
+        Id = Ulid.New().ToGuid(),
         Email = request.Email,
         Username = request.Username.ToLowerInvariant(),
         FirstName = request.FirstName,
@@ -16,7 +16,7 @@ public static class CreateUserMappers
     };
 
     public static CreateUserResponse MapToResponse(this User user /*Ulid ulid*/) => new(
-        new Ulid(user.Id),
+        Ulid.New(user.Id),
         user.Email,
         user.Username,
         user.FirstName,

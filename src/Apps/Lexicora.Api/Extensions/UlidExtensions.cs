@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
+using Lexicora.Domain.Common;
+
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Lexicora.Api.Extensions;
@@ -11,7 +13,7 @@ public static class UlidExtensions
         out Ulid result,
         [NotNullWhen(false)] out ProblemHttpResult? error)
     {
-        if (Ulid.TryParse(id, out result))
+        if (Ulid.TryParseStrict(id, out result))
         {
             error = null;
             return true;

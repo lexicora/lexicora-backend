@@ -1,3 +1,5 @@
+using Lexicora.Domain.Common;
+
 namespace Lexicora.Api.Infrastructure.Filters;
 
 public class UlidIdValidationFilter : IEndpointFilter
@@ -12,7 +14,7 @@ public class UlidIdValidationFilter : IEndpointFilter
         if (routeValues.TryGetValue("id", out var rawId) && rawId is string idString)
         {
             // 2. Perform the high-performance check.
-            if (!Ulid.TryParse(idString, out _))
+            if (!Ulid.TryParseStrict(idString, out _))
             {
                 // 3. Return TypedResults for Source Gen compatibility.
                 return TypedResults.Problem(

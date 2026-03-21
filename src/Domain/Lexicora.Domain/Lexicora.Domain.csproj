@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ulid" />
+    <PackageReference Include="ByteAether.Ulid" />
   </ItemGroup>
 
 </Project>

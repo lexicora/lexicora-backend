@@ -1,3 +1,5 @@
+using Lexicora.Domain.Common;
+
 namespace Lexicora.Api.Infrastructure.RouteConstraints;
 
 public class UlidConstraint : IRouteConstraint
@@ -7,8 +9,8 @@ public class UlidConstraint : IRouteConstraint
     {
         if (values.TryGetValue(routeKey, out var value) && value is string stringValue)
         {
-            // Cysharp's Ulid.TryParse is very efficient (0 allocations)
-            return Ulid.TryParse(stringValue, out _);
+            // ByteAether's Ulid.TryParseStrict is very efficient (0 allocations)
+            return Ulid.TryParseStrict(stringValue, out _);
         }
         return false;
     }
