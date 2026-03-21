@@ -26,9 +26,9 @@ public static class UlidExtensions
                 !input.ContainsAnyExcept(StrictCrockfordChars))
             {
                 // Now that we've guaranteed the string is strictly valid,
-                // we let default implementation handle the high-speed bit-shifting.
-                return Ulid.TryParse(input, null, out result);
-                //TODO: Maybe use regular parse, because validation is already done, and we want to avoid redundant checks in TryParse.
+                // We let default implementation handle the high-speed bit-shifting.
+                result = Ulid.Parse(input);
+                return true;
             }
 
             result = default;
