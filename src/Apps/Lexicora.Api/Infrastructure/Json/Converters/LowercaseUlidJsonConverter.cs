@@ -69,11 +69,11 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
         Span<byte> ulidString = stackalloc byte[Ulid.UlidStringLength];
         ulid.TryFormat(ulidString, out var _, []);
 
-        // Optimized SIMD lowercase conversion for .NET 10
-        // This handles the 'A'-'Z' to 'a'-'z' mapping in a single pass.
-        Ascii.ToLower(ulidString, ulidString, out _);
+        // Added code, compared to original implementation.
+        Span<byte> lowerBuffer = stackalloc byte[Ulid.UlidStringLength];
+        Ascii.ToLower(ulidString, lowerBuffer, out _);
 
-        writer.WriteStringValue(ulidString);
+        writer.WriteStringValue(lowerBuffer);
     }
 
     /// <inheritdoc/>
@@ -81,7 +81,11 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
     {
         Span<byte> ulidString = stackalloc byte[Ulid.UlidStringLength];
         ulid.TryFormat(ulidString, out var _, []);
-        Ascii.ToLower(ulidString, ulidString, out _);
+
+        // Added code, compared to original implementation.
+        Span<byte> lowerBuffer = stackalloc byte[Ulid.UlidStringLength];
+        Ascii.ToLower(ulidString, lowerBuffer, out _);
+
         writer.WritePropertyName(ulidString);
     }
 
