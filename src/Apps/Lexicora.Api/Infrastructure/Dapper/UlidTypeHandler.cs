@@ -11,9 +11,9 @@ public class UlidTypeHandler : SqlMapper.TypeHandler<Ulid>
     {
         return value switch
         {
-            Guid guid => new Ulid(guid),
+            Guid guid => Ulid.New(guid),
             string str => Ulid.Parse(str),
-            byte[] bytes => new Ulid(bytes),
+            byte[] bytes => Ulid.New(bytes),
             _ => throw new InvalidCastException($"Cannot convert {value?.GetType()} to Ulid.")
         };
     }

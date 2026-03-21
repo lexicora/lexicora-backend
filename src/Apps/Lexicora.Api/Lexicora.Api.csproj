@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ByteAether.Ulid" />
     <PackageReference Include="Dapper" />
     <PackageReference Include="Dapper.AOT" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
@@ -21,7 +22,6 @@
     <PackageReference Include="Npgsql" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Scalar.AspNetCore" />
-    <PackageReference Include="Ulid" />
   </ItemGroup>
 
   <ItemGroup>

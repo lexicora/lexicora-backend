@@ -6,7 +6,7 @@ public static class GetTopicByIdMappers
 {
     //extension (Topic topic) {}
     public static GetTopicByIdResponse MapToResponse(this Topic topic) => new(
-            new Ulid(topic.Id),
+            Ulid.New(topic.Id),
             topic.Name,
             topic.Description,
             topic.IsFavorite,

@@ -2,7 +2,7 @@ namespace Lexicora.Domain.Entities;
 
 public class Entry
 {
-    public Guid Id { get; set; } = Ulid.NewUlid().ToGuid(); // Faster than Guid.CreateVersion7()
+    public Guid Id { get; set; } = Ulid.New().ToGuid(); // Faster than Guid.CreateVersion7()
     public Guid UserId { get; set; }
     public Guid TopicId { get; set; }
 
