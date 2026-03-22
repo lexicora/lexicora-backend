@@ -5,6 +5,8 @@ public class Topic
     public Guid Id { get; set; } = Ulid.New().ToGuid(); // Faster than Guid.CreateVersion7()
     public Guid UserId { get; set; }
 
+    //TODO: Add slug later
+    //potential slug schema: [{Name.ToLowerInvariant().Replace(" ", "-")}-{Ulid.New(Id).ToString()[..10]/*time part*/.ToLowerInvariant()}] 
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public bool IsFavorite { get; set; } = false;

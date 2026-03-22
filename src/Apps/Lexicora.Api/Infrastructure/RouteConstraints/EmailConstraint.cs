@@ -5,7 +5,7 @@ namespace Lexicora.Api.Infrastructure.RouteConstraints;
 public partial class EmailConstraint : IRouteConstraint
 {
 
-    [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+    [GeneratedRegex(@"^(?=.{5,254}$)[^@\s]+@[^@\s]+\.[^@\s]{2,}$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
     private static partial Regex EmailRegex();
 
     public bool Match(HttpContext? httpContext, IRouter? route, string routeKey,

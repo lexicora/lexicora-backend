@@ -10,8 +10,8 @@ public record CreateUserRequest(
     string Email,
 
     [property: Required]
-    [property: RegularExpression("^[a-zA-Z0-9_.-]+$", ErrorMessage = "Username can only contain letters, numbers, underscores, dots, and hyphens.")]
     [property: StringLength(30, MinimumLength = 3)]
+    [property: RegularExpression("^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$", ErrorMessage = "Username can only contain letters, numbers, underscores, dots. Also, it must start and end with a letter or number.")]
     string Username,
 
     [property: Required]

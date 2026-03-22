@@ -5,7 +5,7 @@ using Dapper;
 
 namespace Lexicora.Api.Infrastructure.Dapper;
 
-public class JsonElementTypeHandler : SqlMapper.TypeHandler<JsonElement>
+public class JsonElementHandler : SqlMapper.TypeHandler<JsonElement>
 {
     // How to save it to the DB
     public override void SetValue(IDbDataParameter parameter, JsonElement value)

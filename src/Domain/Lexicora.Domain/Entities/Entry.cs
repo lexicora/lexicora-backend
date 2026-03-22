@@ -7,6 +7,8 @@ public class Entry
     public Guid TopicId { get; set; }
 
     // Page Data (From your extension's PageData type)
+    //TODO: Add slug later
+    //potential slug schema: [{Name.ToLowerInvariant().Replace(" ", "-")}-{Ulid.New(Id).ToString()[..10]/*time part*/.ToLowerInvariant()}] 
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
     public List<string> Tags { get; set; } = [];

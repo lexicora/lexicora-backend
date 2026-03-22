@@ -18,8 +18,7 @@ public class GetUserByIdEndpoint : IEndpoint
             .WithName("GetUserById")
             .WithTags("Users")
             .WithSummary("Get user by id.")
-            .WithDescription(
-                "Gets a user by id. Navigation properties are not included, by default so no dto mapping necessary.")
+            .WithDescription("Gets a user by id.")
             .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
     }
 
@@ -43,7 +42,7 @@ public class GetUserByIdEndpoint : IEndpoint
                            entry_count AS "EntryCount",
                            topic_count AS "TopicCount"
                            FROM "public"."users"
-                           WHERE id = @id
+                           WHERE id = @Id
                            """;
 
         var response = await connection.QueryFirstOrDefaultAsync<User>(

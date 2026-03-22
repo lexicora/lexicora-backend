@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Lexicora.Api.Features.Users.CreateUser;
 using Lexicora.Api.Features.Users.GetUserByEmail;
 using Lexicora.Api.Features.Users.GetUserById;
+using Lexicora.Api.Features.Users.GetUserByUsername;
 
 namespace Lexicora.Api.Infrastructure.Json.Contexts;
 
@@ -19,4 +20,5 @@ namespace Lexicora.Api.Infrastructure.Json.Contexts;
 [JsonSerializable(typeof(CreateUserResponse))]
 [JsonSerializable(typeof(GetUserByIdResponse))]
 [JsonSerializable(typeof(GetUserByEmailResponse))]
+[JsonSerializable(typeof(GetUserByUsernameResponse))]
 internal partial class UsersJsonContext : JsonSerializerContext;

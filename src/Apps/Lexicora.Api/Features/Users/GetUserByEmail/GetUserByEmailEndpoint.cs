@@ -17,8 +17,7 @@ public class GetUserByEmailEndpoint : IEndpoint
             .WithName("GetUserByEmail")
             .WithTags("Users")
             .WithSummary("Get user by email.")
-            .WithDescription(
-                "Gets a user by email. Navigation properties are not included, by default so no dto mapping necessary.");
+            .WithDescription("Gets a user by email.");
     }
 
     private static async Task<Results<Ok<GetUserByEmailResponse>, NotFound>> HandleAsync(

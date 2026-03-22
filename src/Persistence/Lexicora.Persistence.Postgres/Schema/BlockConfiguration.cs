@@ -58,6 +58,7 @@ public class BlockConfiguration : IEntityTypeConfiguration<Block>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
+        // TODO: Maybe change delete behavior to something else, but technically if a parent block is deleted in the BlockNote editor, its children get deleted to, which matches the cascading behavior.
         builder.HasOne(b => b.ParentBlock)
             .WithMany(b => b.Children)
             .HasForeignKey(b => b.ParentBlockId)
