@@ -1,8 +1,7 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Features.Users.CreateUser;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using Lexicora.Api.Features.Users.GetUserById;
+
 using Scalar.AspNetCore;
 
 namespace Lexicora.Api.Features.Users;
@@ -16,6 +15,14 @@ public class UsersConfiguration : IEndpointConfiguration
             .WithDescription("Endpoints for managing users.")
             .WithBadge("Users", color: "green");
 
+        // GET
+        GetUserByIdEndpoint.Map(usersGroup);
+
+        // POST
         CreateUserEndpoint.Map(usersGroup);
+
+        // UPDATE (PUT/PATCH) - To be implemented
+
+        // DELETE - To be implemented
     }
 }

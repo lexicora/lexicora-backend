@@ -22,11 +22,10 @@ public class GetTopicByIdEndpoint : IEndpoint
             .WithSummary("Get topic by id.")
             .WithDescription(
                 "Gets a topic by id. Navigation properties are not included, by default so no dto mapping necessary.") // Supposedly supports markdown and used for extensive documentation.
-            .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
     }
 
-    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound, ProblemHttpResult>> HandleAsync(
+    private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound>> HandleAsync(
         string id, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         //if (!id.TryParseRouteId(out var ulid, out var error))

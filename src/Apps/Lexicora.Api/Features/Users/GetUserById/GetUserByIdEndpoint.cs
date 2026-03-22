@@ -1,0 +1,58 @@
+using Dapper;
+
+using Lexicora.Api.Contracts.Endpoints;
+using Lexicora.Api.Extensions;
+using Lexicora.Domain.Entities;
+
+using Microsoft.AspNetCore.Http.HttpResults;
+
+using Npgsql;
+
+namespace Lexicora.Api.Features.Users.GetUserById;
+
+public class GetUserByIdEndpoint : IEndpoint
+{
+    public static void Map(IEndpointRouteBuilder group)
+    {
+        group.MapGet("/users/{id:ulid}", HandleAsync)
+            .WithName("GetUserById")
+            .WithTags("Users")
+            .WithSummary("Get user by id.")
+            .WithDescription(
+                "Gets a user by id. Navigation properties are not included, by default so no dto mapping necessary.")
+            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
+    }
+
+    private static async Task<Results<Ok<GetUserByIdResponse>, NotFound>> HandleAsync(
+        string id, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
+    {
+        var ulid = Ulid.Parse(id); // Safe, because of the route constraint.
+
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+        const string sql = """
+                           SELECT 
+                           id AS "Id",
+                           email AS "Email",
+                           username AS "Username",
+                           first_name AS "FirstName",
+                           last_name AS "LastName",
+                           display_name AS "DisplayName",
+                           created_at AS "CreatedAt",
+                           updated_at AS "UpdatedAt",
+                           entry_count AS "EntryCount",
+                           topic_count AS "TopicCount"
+                           FROM "public"."users"
+                           WHERE id = @id
+                           """;
+
+        var response = await connection.QueryFirstOrDefaultAsync<User>(
+            sql,
+            new { Id = ulid.ToGuid() }
+        );
+
+        return response is not null
+            ? TypedResults.Ok(response.MapToResponse())
+            : TypedResults.NotFound();
+    }
+}
