@@ -5,7 +5,8 @@ namespace Lexicora.Api.Features.Users.CreateUser;
 public record CreateUserRequest(
     [property: Required]
     [property: EmailAddress]
-    [property: MaxLength(255)]
+    [property: RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$", ErrorMessage = "Invalid e-mail format.")] // Improvement over the default EmailAddressAttribute, which is kind of weak.
+    [property: MaxLength(254)]
     string Email,
 
     [property: Required]

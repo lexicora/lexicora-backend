@@ -7,7 +7,7 @@ public static class CreateUserMappers
     public static User MapToEntity(this CreateUserRequest request /*Ulid ulid*/) => new()
     {
         Id = Ulid.New().ToGuid(),
-        Email = request.Email.Trim(),
+        Email = request.Email.ToLowerInvariant(),
         Username = request.Username.ToLowerInvariant(),
         FirstName = request.FirstName.Trim(),
         LastName = request.LastName.Trim(),

@@ -24,4 +24,22 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new EntryConfiguration());
         modelBuilder.ApplyConfiguration(new BlockConfiguration());
     }
+
+    // Potentially override SaveChangesAsync to automatically set UpdatedAt for modified entities, but this is optional and can be handled in the application layer if preferred.
+    //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    //{
+    //    var entries = ChangeTracker.Entries()
+    //        .Where(e => e.State == EntityState.Modified);
+
+    //    foreach (var entry in entries)
+    //    {
+    //        // If the entity has an UpdatedAt property, set it to UTC now
+    //        if (entry.Entity.GetType().GetProperty("UpdatedAt") != null)
+    //        {
+    //            entry.Property("UpdatedAt").CurrentValue = DateTime.UtcNow;
+    //        }
+    //    }
+
+    //    return base.SaveChangesAsync(cancellationToken);
+    //}
 }

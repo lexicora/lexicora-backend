@@ -14,7 +14,7 @@ public class GetUserByIdEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder group)
     {
-        group.MapGet("/users/{id:ulid}", HandleAsync)
+        group.MapGet("/{id:ulid}", HandleAsync)
             .WithName("GetUserById")
             .WithTags("Users")
             .WithSummary("Get user by id.")

@@ -1,5 +1,6 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Features.Users.CreateUser;
+using Lexicora.Api.Features.Users.GetUserByEmail;
 using Lexicora.Api.Features.Users.GetUserById;
 
 using Scalar.AspNetCore;
@@ -17,6 +18,7 @@ public class UsersConfiguration : IEndpointConfiguration
 
         // GET
         GetUserByIdEndpoint.Map(usersGroup);
+        GetUserByEmailEndpoint.Map(usersGroup);
 
         // POST
         CreateUserEndpoint.Map(usersGroup);

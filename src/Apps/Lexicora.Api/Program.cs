@@ -65,6 +65,7 @@ public class Program
 
         builder.Services.Configure<RouteOptions>(options =>
         {
+            options.ConstraintMap.Add("email", typeof(EmailConstraint));
             options.ConstraintMap.Add("ulid", typeof(UlidConstraint));
         });
 

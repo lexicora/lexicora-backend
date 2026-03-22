@@ -276,9 +276,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(254)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("character varying(254)")
                         .HasColumnName("email");
 
                     b.Property<int>("EntryCount")

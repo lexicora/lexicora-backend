@@ -26,7 +26,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Email)
             .HasColumnName("email")
-            .HasMaxLength(255)
+            .HasMaxLength(254)
             .IsUnicode()
             .IsRequired();
 
