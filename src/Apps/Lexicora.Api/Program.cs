@@ -31,6 +31,8 @@ public class Program
             IncrementRandomSource = new PseudoRandomProvider()
         };
 
+        //SqlMapper.AddTypeHandler(new JsonElementTypeHandler());
+
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -94,6 +96,7 @@ public class Program
 
         // Maybe add later if needed manual mapping might be slightly slower, but is clearer.
         //SqlMapper.AddTypeHandler(new UlidTypeHandler());
+        //SqlMapper.AddTypeHandler(new JsonElementTypeHandler());
 
         // Configure the database connection and register the data source as a singleton
         var connectionString = builder.Configuration.GetConnectionString("Postgres");

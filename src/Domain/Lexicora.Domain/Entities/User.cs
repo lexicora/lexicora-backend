@@ -8,8 +8,8 @@ public class User
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string? DisplayName { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset? UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public int EntryCount { get; set; } // Denormalized count of entries for performance
     public int TopicCount { get; set; } // Denormalized count of topics for performance

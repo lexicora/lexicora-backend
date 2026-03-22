@@ -11,7 +11,9 @@ public record GetTopicByIdResponse(
     string? Description,
     bool IsFavorite,
     List<string> Tags,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset? UpdatedAt,
+    DateTime CreatedAt,
+    DateTime? UpdatedAt,
     int EntryCount
 );
+
+// DateTime was DateTimeOffset, but changed for compatibility.

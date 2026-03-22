@@ -64,11 +64,13 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 
         builder.Property(t => t.CreatedAt)
             .HasColumnName("created_at")
+            .HasColumnType("timestamp with time zone")
             .HasDefaultValueSql("now()")
             .IsRequired();
 
         builder.Property(t => t.UpdatedAt)
-            .HasColumnName("updated_at");
+            .HasColumnName("updated_at")
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(t => t.EntryCount)
             .HasColumnName("entry_count")

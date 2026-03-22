@@ -27,8 +27,8 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     first_name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     last_name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     display_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     entry_count = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     topic_count = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
                 },
@@ -49,8 +49,8 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     is_favorite = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     tags = table.Column<List<string>>(type: "text[]", nullable: false, defaultValueSql: "'{}'"),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     entry_count = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
@@ -84,8 +84,8 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     origin_url = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     path_url = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     language_code = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     site_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     excerpt = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     byline = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),

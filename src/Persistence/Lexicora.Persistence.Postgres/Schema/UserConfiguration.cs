@@ -55,11 +55,13 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.CreatedAt)
             .HasColumnName("created_at")
+            .HasColumnType("timestamp with time zone")
             .HasDefaultValueSql("now()")
             .IsRequired();
 
         builder.Property(u => u.UpdatedAt)
-            .HasColumnName("updated_at");
+            .HasColumnName("updated_at")
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(u => u.EntryCount)
             .HasColumnName("entry_count")

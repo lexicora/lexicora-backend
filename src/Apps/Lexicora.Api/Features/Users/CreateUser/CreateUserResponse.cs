@@ -12,4 +12,4 @@ public record CreateUserResponse(
     string FirstName,
     string LastName,
     string? DisplayName,
-    DateTimeOffset CreatedAt);
+    DateTime CreatedAt);

@@ -16,8 +16,8 @@ public class Entry
     public string OriginUrl { get; set; } = string.Empty; // The original URL before any redirects (if available)
     public string? PathUrl { get; set; }
     public string LanguageCode { get; set; } = string.Empty; // Language code (e.g., "en", "fr")
-    public DateTimeOffset CreatedAt { get; set; } // When you scraped it
-    public DateTimeOffset? UpdatedAt { get; set; } // When you last updated it
+    public DateTime CreatedAt { get; set; } // When you scraped it
+    public DateTime? UpdatedAt { get; set; } // When you last updated it
 
     // Metadata
     public string? SiteName { get; set; }

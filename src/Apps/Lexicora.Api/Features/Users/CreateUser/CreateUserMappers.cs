@@ -7,12 +7,12 @@ public static class CreateUserMappers
     public static User MapToEntity(this CreateUserRequest request /*Ulid ulid*/) => new()
     {
         Id = Ulid.New().ToGuid(),
-        Email = request.Email,
+        Email = request.Email.Trim(),
         Username = request.Username.ToLowerInvariant(),
-        FirstName = request.FirstName,
-        LastName = request.LastName,
-        DisplayName = request.DisplayName,
-        CreatedAt = DateTimeOffset.UtcNow
+        FirstName = request.FirstName.Trim(),
+        LastName = request.LastName.Trim(),
+        DisplayName = request.DisplayName?.Trim(),
+        CreatedAt = DateTime.UtcNow
     };
 
     public static CreateUserResponse MapToResponse(this User user /*Ulid ulid*/) => new(

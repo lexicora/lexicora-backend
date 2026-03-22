@@ -9,8 +9,8 @@ public class Topic
     public string? Description { get; set; }
     public bool IsFavorite { get; set; } = false;
     public List<string> Tags { get; set; } = [];
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset? UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public int EntryCount { get; set; } // Denormalized count of entries for performance
 

@@ -7,8 +7,8 @@ public record GetUserByIdResponse(
     string FirstName,
     string LastName,
     string? DisplayName,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset? UpdatedAt,
+    DateTime CreatedAt,
+    DateTime? UpdatedAt,
     int EntryCount,
     int TopicCount
 );

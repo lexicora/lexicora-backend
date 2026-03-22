@@ -96,11 +96,13 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
+            .HasColumnType("timestamp with time zone")
             .HasDefaultValueSql("now()")
             .IsRequired();
 
         builder.Property(e => e.UpdatedAt)
-            .HasColumnName("updated_at");
+            .HasColumnName("updated_at")
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(e => e.SiteName)
             .HasColumnName("site_name")
