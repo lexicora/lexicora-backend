@@ -15,10 +15,10 @@ public class TopicsConfiguration : IEndpointConfiguration
             .WithBadge("Topics", color: "blue");
         //.AddEndpointFilter<UlidIdValidationFilter>();
 
-        // GET
+        // READ (GET)
         GetTopicByIdEndpoint.Map(topicsGroup);
 
-        // POST
+        // CREATE (POST)
 
         // UPDATE (PUT/PATCH)
 

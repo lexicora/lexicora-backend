@@ -16,11 +16,11 @@ public class UsersConfiguration : IEndpointConfiguration
             .WithDescription("Endpoints for managing users.")
             .WithBadge("Users", color: "green");
 
-        // GET
+        // READ (GET)
         GetUserByIdEndpoint.Map(usersGroup);
         GetUserByEmailEndpoint.Map(usersGroup);
 
-        // POST
+        // CREATE (POST)
         CreateUserEndpoint.Map(usersGroup);
 
         // UPDATE (PUT/PATCH) - To be implemented
