@@ -16,20 +16,11 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
             // Enforce max 10 tags per entry
             e.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
-
-            //e.HasCheckConstraint("CK_Tags_MaxMemberLength", "all_elements_len_check(tags, 50)");
-            // IMPORTANT: Run following sql in the db before using this!
-            /*
-               CREATE OR REPLACE FUNCTION all_elements_len_check(arr text[], max_len int)
-               RETURNS boolean AS $$
-               BEGIN
-                 RETURN NOT EXISTS (SELECT 1 FROM unnest(arr) s WHERE length(s) > max_len);
-               END;
-               $$ LANGUAGE plpgsql IMMUTABLE;
-             */
         }); // public For Supabase configuration
 
         builder.HasKey(e => e.Id);
+
+        builder.HasIndex(e => e.Slug).IsUnique();
 
         builder.Property(e => e.Id)
             .HasColumnName("id")
@@ -43,6 +34,15 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .HasColumnName("topic_id")
             .IsRequired();
 
+        builder.Property(e => e.Slug)
+            .HasColumnName("slug")
+            .HasMaxLength(100)
+            .IsUnicode()
+            .IsRequired();
+        // Schema of slug:
+        // {(length 87)Title.ToLowerInvariant().Replace(' ', '-')}-{ulidString[..12]/*time part + 2 random chars*/.ToLowerInvariant()}]
+        // use more efficient to lower way with 0 allocation way of doing this whole thing.
+
         builder.Property(e => e.Title)
             .HasColumnName("title")
             .HasMaxLength(500) // Maybe increase this to 1000 if needed, but 500 should be enough for most titles
@@ -54,17 +54,18 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             .HasMaxLength(1000)
             .IsUnicode();
 
+        //TODO: Create a gin index for this column, for querying.
+        builder.Property(e => e.Tags)
+            .HasColumnName("tags")
+            .HasColumnType("varchar(50)[]")
+            .HasDefaultValueSql("'{}'") // Default to an empty array
+            .IsUnicode()
+            .IsRequired();
+
         builder.Property(e => e.FaviconUrl)
             .HasColumnName("favicon_url")
             .HasMaxLength(1000)
             .IsUnicode();
-
-        builder.Property(e => e.Tags)
-            .HasColumnName("tags")
-            .HasColumnType("text[]")
-            .HasDefaultValueSql("'{}'") // Default to an empty array
-            .IsUnicode()
-            .IsRequired();
 
         builder.Property(e => e.IsFavorite)
             .HasColumnName("is_favorite")

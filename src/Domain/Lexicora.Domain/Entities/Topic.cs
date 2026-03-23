@@ -5,12 +5,11 @@ public class Topic
     public Guid Id { get; set; } = Ulid.New().ToGuid(); // Faster than Guid.CreateVersion7()
     public Guid UserId { get; set; }
 
-    //TODO: Add slug later
-    //potential slug schema: [{Name.ToLowerInvariant().Replace(" ", "-")}-{Ulid.New(Id).ToString()[..10]/*time part*/.ToLowerInvariant()}] 
+    public string Slug { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public List<string> Tags { get; set; } = new(10); // max 50 chars per tag, max 10 tags per entry (db enforced)
     public bool IsFavorite { get; set; } = false;
-    public List<string> Tags { get; set; } = [];
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 

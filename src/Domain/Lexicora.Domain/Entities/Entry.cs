@@ -6,12 +6,10 @@ public class Entry
     public Guid UserId { get; set; }
     public Guid TopicId { get; set; }
 
-    // Page Data (From your extension's PageData type)
-    //TODO: Add slug later
-    //potential slug schema: [{Name.ToLowerInvariant().Replace(" ", "-")}-{Ulid.New(Id).ToString()[..10]/*time part*/.ToLowerInvariant()}] 
+    public string Slug { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
-    public List<string> Tags { get; set; } = [];
+    public List<string> Tags { get; set; } = new(10); // max 50 chars per tag, max 10 tags per entry (db enforced)
     public bool IsFavorite { get; set; } = false;
     public string? FaviconUrl { get; set; }
     public string Url { get; set; } = string.Empty; // maps to location.href or baseUri

@@ -143,11 +143,18 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("site_name");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("slug");
+
                     b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .IsUnicode(true)
-                        .HasColumnType("text[]")
+                        .HasColumnType("varchar(50)[]")
                         .HasColumnName("tags")
                         .HasDefaultValueSql("'{}'");
 
@@ -178,6 +185,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.HasIndex("TopicId");
 
@@ -228,11 +238,18 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("slug");
+
                     b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .IsUnicode(true)
-                        .HasColumnType("text[]")
+                        .HasColumnType("varchar(50)[]")
                         .HasColumnName("tags")
                         .HasDefaultValueSql("'{}'");
 
@@ -245,6 +262,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -313,9 +333,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(100)
+                        .HasMaxLength(30)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("username");
 
                     b.HasKey("Id");

@@ -26,9 +26,12 @@ public class Program
 
         Ulid.DefaultGenerationOptions = new Ulid.GenerationOptions
         {
-            Monotonicity = Ulid.GenerationOptions.MonotonicityOptions.MonotonicRandom4Byte,
-            InitialRandomSource = new CryptographicallySecureRandomProvider(),
-            IncrementRandomSource = new PseudoRandomProvider()
+            Monotonicity = Ulid.GenerationOptions.MonotonicityOptions.NonMonotonic
+            // Important for slug time parts (ulidString[..12]) time + 2 random chars.
+
+            // Both below are the default RandomSources, so no need to manually set them.
+            //InitialRandomSource = new CryptographicallySecureRandomProvider(),
+            //IncrementRandomSource = new PseudoRandomProvider()
         };
 
         //SqlMapper.AddTypeHandler(new JsonElementTypeHandler());

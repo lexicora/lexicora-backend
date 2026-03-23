@@ -32,7 +32,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Username)
             .HasColumnName("username")
-            .HasMaxLength(100)
+            .HasMaxLength(30)
             .IsUnicode()
             .IsRequired();
 
