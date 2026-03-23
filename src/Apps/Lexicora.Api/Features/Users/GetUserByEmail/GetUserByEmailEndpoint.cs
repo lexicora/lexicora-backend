@@ -19,7 +19,7 @@ public class GetUserByEmailEndpoint : IEndpoint
         group.MapGet("/by-email/{email}", HandleAsync)
             .WithName("GetUserByEmail")
             .WithTags("Users")
-            .WithSummary("Get user by email.")
+            .WithSummary("Get user by email")
             .WithDescription("Gets a user by email.")
             .WithParameterMetadata(0, "The email of the user to retrieve. A valid email address is required.");
     }

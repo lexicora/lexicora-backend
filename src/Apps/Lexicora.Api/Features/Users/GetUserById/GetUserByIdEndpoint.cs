@@ -17,7 +17,7 @@ public class GetUserByIdEndpoint : IEndpoint
         group.MapGet("/{id:ulid}", HandleAsync)
             .WithName("GetUserById")
             .WithTags("Users")
-            .WithSummary("Get user by id.")
+            .WithSummary("Get user by id")
             .WithDescription("Gets a user by id.")
             .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
     }

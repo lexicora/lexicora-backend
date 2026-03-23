@@ -19,7 +19,7 @@ public class GetUserByUsernameEndpoint : IEndpoint
         group.MapGet("/by-username/{username}", HandleAsync)
             .WithName("GetUserByUsername")
             .WithTags("Users")
-            .WithSummary("Get user by username.")
+            .WithSummary("Get user by username")
             .WithDescription("Gets a user by username.")
             .WithParameterMetadata(0, "The username of the user to retrieve. A valid username is required. <br>" +
                                       "Regex pattern: `^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$`");

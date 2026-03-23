@@ -159,7 +159,9 @@ public class Program
                     .WithTheme(ScalarTheme.Purple)
                     //.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch)
                     .HideClientButton()
-                    .WithTitle("Lexicora API Reference");
+                    .WithTitle("Lexicora API Reference")
+                    .ShowOperationId()
+                    .SortOperationsByMethod();
             });
             app.UseDeveloperExceptionPage();
         }
