@@ -1,6 +1,9 @@
 using Dapper;
 
 using Lexicora.Api.Contracts.Endpoints;
+using Lexicora.Api.Extensions;
+using Lexicora.Api.Infrastructure.Common;
+using Lexicora.Api.Infrastructure.Validation;
 using Lexicora.Domain.Entities;
 
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -13,16 +16,23 @@ public class GetUserByEmailEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder group)
     {
-        group.MapGet("/{email:email}", HandleAsync)
+        group.MapGet("/by-email/{email}", HandleAsync)
             .WithName("GetUserByEmail")
             .WithTags("Users")
             .WithSummary("Get user by email.")
-            .WithDescription("Gets a user by email.");
+            .WithDescription("Gets a user by email.")
+            .WithParameterMetadata(0, "The email of the user to retrieve. A valid email address is required.");
     }
 
-    private static async Task<Results<Ok<GetUserByEmailResponse>, NotFound>> HandleAsync(
+    private static async Task<Results<Ok<GetUserByEmailResponse>, NotFound, BadRequest<BadRequestResponse>>> HandleAsync(
         string email, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
+        // Maybe implement validation only partially in regex for performance
+        if (!RouteVariables.IsValidEmail(email))
+        {
+            return TypedResults.BadRequest(new BadRequestResponse($"The value '{email}' is not a valid Email."));
+        }
+
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
 
         const string sql = """

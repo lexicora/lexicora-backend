@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 
-using Microsoft.AspNetCore.Mvc;
+using Lexicora.Api.Infrastructure.Common;
+
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Lexicora.Api.Infrastructure.Json.Contexts;
 
@@ -8,5 +10,6 @@ namespace Lexicora.Api.Infrastructure.Json.Contexts;
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 //[JsonSerializable(typeof(Ulid))]
 //[JsonSerializable(typeof(NotFound))]
-[JsonSerializable(typeof(ProblemDetails))]
+[JsonSerializable(typeof(ProblemHttpResult))]
+[JsonSerializable(typeof(BadRequestResponse))]
 internal partial class AppJsonContext : JsonSerializerContext;
