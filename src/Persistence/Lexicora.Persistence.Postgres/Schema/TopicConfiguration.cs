@@ -33,6 +33,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 
         builder.Property(t => t.Slug)
             .HasColumnName("slug")
+            .HasColumnType("citext")
             .HasMaxLength(100)
             .IsUnicode()
             .IsRequired();

@@ -13,8 +13,18 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         {
             // Maybe change this to a code comment only
             u.HasComment("Represents a user of the application. Each user has a unique email and username, as well as personal information like first name, last name, and display name. The EntryCount property keeps track of how many entries the user has saved across all topics, which can be useful for displaying user summaries without needing to load all entries. Auth stuff handled by the supabase auth user schema.");
-            // Add check constraints to properties that have regex constraints in the app layer, to enforce data integrity at the database level as well. (for this entity username and email)
-            // Regex must not be very strict for the database constraints.
+
+            u.HasCheckConstraint(
+                "CK_User_Email_Valid",
+                @"email ~* '^[^@\s]+@[^@\s]+\.[^@\s]{2,}$' AND LENGTH(email) >= 6"
+            );
+
+            // Username: Regex Pattern + Min Length 3
+            // Note: Postgres ARE (Advanced Regular Expressions) supports the lookahead (?! )
+            u.HasCheckConstraint(
+                "CK_User_Username_Valid",
+                "username ~* '^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$' AND LENGTH(username) >= 3"
+            );
         }); // public For Supabase configuration
 
         builder.HasKey(u => u.Id);
@@ -28,12 +38,14 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Email)
             .HasColumnName("email")
+            .HasColumnType("citext")
             .HasMaxLength(254)
             .IsUnicode()
             .IsRequired();
 
         builder.Property(u => u.Username)
             .HasColumnName("username")
+            .HasColumnType("citext")
             .HasMaxLength(30)
             .IsUnicode()
             .IsRequired();
@@ -52,7 +64,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.DisplayName)
             .HasColumnName("display_name")
-            .HasMaxLength(255)
+            .HasMaxLength(200)
             .IsUnicode();
 
         builder.Property(u => u.CreatedAt)

@@ -9,7 +9,6 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    // DbSets
     public DbSet<User> Users => Set<User>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Entry> Entries => Set<Entry>();
@@ -18,6 +17,9 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.HasDefaultSchema("public");
+        modelBuilder.HasPostgresExtension("citext");
 
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new TopicConfiguration());

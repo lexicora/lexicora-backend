@@ -37,6 +37,7 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
         builder.Property(e => e.Slug)
             .HasColumnName("slug")
+            .HasColumnType("citext")
             .HasMaxLength(100)
             .IsUnicode()
             .IsRequired();

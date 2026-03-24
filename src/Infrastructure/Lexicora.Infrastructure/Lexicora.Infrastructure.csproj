@@ -11,6 +11,8 @@
   <ItemGroup>
     <Folder Include="Ai\" />
     <Folder Include="Auth\" />
+    <Folder Include="Email\" />
+    <Folder Include="Cdn\" />
   </ItemGroup>
 
 </Project>
