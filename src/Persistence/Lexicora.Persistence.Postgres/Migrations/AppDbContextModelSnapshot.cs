@@ -41,7 +41,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasColumnName("entry_id");
 
                     b.Property<double>("Order")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
+                        .HasDefaultValue(0.0)
                         .HasColumnName("order");
 
                     b.Property<Guid?>("ParentBlockId")
@@ -199,7 +201,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         {
                             t.HasComment("Represents a saved web page or article with metadata and content blocks.");
 
-                            t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
+                            t.HasCheckConstraint("CK_entries_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
+
+                            t.HasCheckConstraint("CK_entries_tags_max_count", "cardinality(tags) <= 10");
                         });
                 });
 
@@ -274,7 +278,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         {
                             t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
 
-                            t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
+                            t.HasCheckConstraint("CK_topics_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
+
+                            t.HasCheckConstraint("CK_topics_tags_max_count", "cardinality(tags) <= 10");
                         });
                 });
 
@@ -352,9 +358,9 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         {
                             t.HasComment("Represents a user of the application. Each user has a unique email and username, as well as personal information like first name, last name, and display name. The EntryCount property keeps track of how many entries the user has saved across all topics, which can be useful for displaying user summaries without needing to load all entries. Auth stuff handled by the supabase auth user schema.");
 
-                            t.HasCheckConstraint("CK_User_Email_Valid", "email ~* '^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$' AND LENGTH(email) >= 6");
+                            t.HasCheckConstraint("CK_users_email_valid", "email ~* '^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$' AND LENGTH(email) >= 6 AND LENGTH(email) <= 254");
 
-                            t.HasCheckConstraint("CK_User_Username_Valid", "username ~* '^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$' AND LENGTH(username) >= 3");
+                            t.HasCheckConstraint("CK_users_username_valid", "username ~* '^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$' AND LENGTH(username) >= 3 AND LENGTH(username) <= 30");
                         });
                 });
 
