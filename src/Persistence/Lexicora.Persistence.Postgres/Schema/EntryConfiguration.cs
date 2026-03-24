@@ -15,8 +15,8 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
             e.HasComment("Represents a saved web page or article with metadata and content blocks.");
 
             // Enforce max 10 tags per entry
-            e.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
-            // Add check constraints to properties that have regex constraints in the app layer, to enforce data integrity at the database level as well. (for example slugs)
+            e.HasCheckConstraint("CK_entries_tags_max_count", "cardinality(tags) <= 10");
+            e.HasCheckConstraint("CK_entries_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
         }); // public For Supabase configuration
 
         builder.HasKey(e => e.Id);

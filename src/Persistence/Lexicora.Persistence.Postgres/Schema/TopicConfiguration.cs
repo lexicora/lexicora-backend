@@ -15,8 +15,8 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
             t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
 
             // Enforce max 10 tags per topic
-            t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
-            // Add check constraints to properties that have regex constraints in the app layer, to enforce data integrity at the database level as well. (for example slugs)
+            t.HasCheckConstraint("CK_topics_tags_max_count", "cardinality(tags) <= 10");
+            t.HasCheckConstraint("CK_topics_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
         }); // public For Supabase configuration
 
         builder.HasKey(t => t.Id);

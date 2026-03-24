@@ -33,11 +33,12 @@ public class BlockConfiguration : IEntityTypeConfiguration<Block>
 
         builder.Property(b => b.Order)
             .HasColumnName("order")
+            .HasDefaultValue(0d)
             .IsRequired();
 
         builder.Property(b => b.Type)
             .HasColumnName("type")
-            .HasMaxLength(50) // Maybe increase later.
+            .HasMaxLength(50) // Maybe increase later, should not be necessary.
             .IsUnicode()
             .IsRequired();
 

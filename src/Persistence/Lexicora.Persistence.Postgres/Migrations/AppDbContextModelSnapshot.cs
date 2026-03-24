@@ -19,9 +19,11 @@ namespace Lexicora.Persistence.Postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Lexicora.Domain.Entities.Block", b =>
@@ -147,7 +149,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("citext")
                         .HasColumnName("slug");
 
                     b.PrimitiveCollection<List<string>>("Tags")
@@ -242,7 +244,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("citext")
                         .HasColumnName("slug");
 
                     b.PrimitiveCollection<List<string>>("Tags")
@@ -289,16 +291,16 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("DisplayName")
-                        .HasMaxLength(255)
+                        .HasMaxLength(200)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("display_name");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(254)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(254)")
+                        .HasColumnType("citext")
                         .HasColumnName("email");
 
                     b.Property<int>("EntryCount")
@@ -335,7 +337,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(true)
-                        .HasColumnType("character varying(30)")
+                        .HasColumnType("citext")
                         .HasColumnName("username");
 
                     b.HasKey("Id");
@@ -349,6 +351,10 @@ namespace Lexicora.Persistence.Postgres.Migrations
                     b.ToTable("users", "public", t =>
                         {
                             t.HasComment("Represents a user of the application. Each user has a unique email and username, as well as personal information like first name, last name, and display name. The EntryCount property keeps track of how many entries the user has saved across all topics, which can be useful for displaying user summaries without needing to load all entries. Auth stuff handled by the supabase auth user schema.");
+
+                            t.HasCheckConstraint("CK_User_Email_Valid", "email ~* '^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$' AND LENGTH(email) >= 6");
+
+                            t.HasCheckConstraint("CK_User_Username_Valid", "username ~* '^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$' AND LENGTH(username) >= 3");
                         });
                 });
 

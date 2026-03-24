@@ -15,15 +15,12 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             u.HasComment("Represents a user of the application. Each user has a unique email and username, as well as personal information like first name, last name, and display name. The EntryCount property keeps track of how many entries the user has saved across all topics, which can be useful for displaying user summaries without needing to load all entries. Auth stuff handled by the supabase auth user schema.");
 
             u.HasCheckConstraint(
-                "CK_User_Email_Valid",
-                @"email ~* '^[^@\s]+@[^@\s]+\.[^@\s]{2,}$' AND LENGTH(email) >= 6"
+                "CK_users_email_valid",
+                @"email ~* '^[^@\s]+@[^@\s]+\.[^@\s]{2,}$' AND LENGTH(email) >= 6 AND LENGTH(email) <= 254"
             );
-
-            // Username: Regex Pattern + Min Length 3
-            // Note: Postgres ARE (Advanced Regular Expressions) supports the lookahead (?! )
             u.HasCheckConstraint(
-                "CK_User_Username_Valid",
-                "username ~* '^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$' AND LENGTH(username) >= 3"
+                "CK_users_username_valid",
+                "username ~* '^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._]))*[a-zA-Z0-9]$' AND LENGTH(username) >= 3 AND LENGTH(username) <= 30"
             );
         }); // public For Supabase configuration
 
