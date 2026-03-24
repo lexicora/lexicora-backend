@@ -45,13 +45,13 @@ public class GetUserByIdEndpoint : IEndpoint
                            WHERE id = @Id
                            """;
 
-        var response = await connection.QueryFirstOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             sql,
             new { Id = ulid.ToGuid() }
         );
 
-        return response is not null
-            ? TypedResults.Ok(response.MapToResponse())
+        return user is not null
+            ? TypedResults.Ok(user.MapToResponse())
             : TypedResults.NotFound();
     }
 }

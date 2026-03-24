@@ -52,9 +52,6 @@ public class CreateUserEndpoint : IEndpoint
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = user.MapToResponse(); // maybe pass ulid as parameter
-        //if (response.Id != new Ulid(user.Id)) throw new InvalidOperationException("The mapped response Id does not match the generated ULID.");
-
-        return TypedResults.Created($"/users/{user.Id}", response);
+        return TypedResults.Created($"/users/{user.Id}", user.MapToResponse());
     }
 }

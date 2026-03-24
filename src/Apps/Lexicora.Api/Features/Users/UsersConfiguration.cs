@@ -4,6 +4,7 @@ using Lexicora.Api.Features.Users.DeleteUser;
 using Lexicora.Api.Features.Users.GetUserByEmail;
 using Lexicora.Api.Features.Users.GetUserById;
 using Lexicora.Api.Features.Users.GetUserByUsername;
+using Lexicora.Api.Features.Users.UpdateUser;
 
 namespace Lexicora.Api.Features.Users;
 
@@ -22,7 +23,8 @@ public class UsersConfiguration : IEndpointConfiguration
         // CREATE (POST)
         CreateUserEndpoint.Map(usersGroup);
 
-        // UPDATE (PUT/PATCH) - To be implemented
+        // UPDATE (PUT/PATCH)
+        UpdateUserEndpoint.Map(usersGroup);
 
         // DELETE
         DeleteUserEndpoint.Map(usersGroup);

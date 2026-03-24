@@ -28,9 +28,6 @@ public class GetTopicByIdEndpoint : IEndpoint
     private static async Task<Results<Ok<GetTopicByIdResponse>, NotFound>> HandleAsync(
         string id, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
-        //if (!id.TryParseRouteId(out var ulid, out var error))
-        //    return error;
-
         var ulid = Ulid.Parse(id); // Safe, because of the route constraint.
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
@@ -49,13 +46,13 @@ public class GetTopicByIdEndpoint : IEndpoint
                            WHERE id = @Id
                            """;
 
-        var response = await connection.QueryFirstOrDefaultAsync<Topic>(
+        var topic = await connection.QueryFirstOrDefaultAsync<Topic>(
             sql,
             new { Id = ulid.ToGuid() } // Pass the parsed GUID as a safe SQL parameter
         );
 
-        return response is not null
-            ? TypedResults.Ok(response.MapToResponse())
+        return topic is not null
+            ? TypedResults.Ok(topic.MapToResponse())
             : TypedResults.NotFound();
     }
 }

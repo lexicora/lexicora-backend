@@ -51,13 +51,13 @@ public class GetUserByEmailEndpoint : IEndpoint
                            WHERE email = @Email
                            """;
 
-        var response = await connection.QueryFirstOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             sql,
             new { Email = email }
         );
 
-        return response is not null
-            ? TypedResults.Ok(response.MapToResponse())
+        return user is not null
+            ? TypedResults.Ok(user.MapToResponse())
             : TypedResults.NotFound();
     }
 }

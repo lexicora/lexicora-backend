@@ -55,13 +55,13 @@ public class GetUserByUsernameEndpoint : IEndpoint
                            WHERE username = @Username
                            """;
 
-        var response = await connection.QueryFirstOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             sql,
             new { Username = username }
         );
 
-        return response is not null
-            ? TypedResults.Ok(response.MapToResponse())
+        return user is not null
+            ? TypedResults.Ok(user.MapToResponse())
             : TypedResults.NotFound();
     }
 }

@@ -23,4 +23,14 @@ public static class UpdateUserMappers
         user.LastName,
         user.DisplayName,
         user.CreatedAt);
+
+    public static void UpdateUserWithRequest(this User user, UpdateUserRequest request)
+    {
+        user.Email = request.Email.ToLowerInvariant();
+        user.Username = request.Username.ToLowerInvariant();
+        user.FirstName = request.FirstName.Trim();
+        user.LastName = request.LastName.Trim();
+        user.DisplayName = request.DisplayName?.Trim();
+        user.UpdatedAt = DateTime.UtcNow;
+    }
 }

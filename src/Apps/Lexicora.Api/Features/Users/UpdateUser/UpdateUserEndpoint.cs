@@ -33,12 +33,9 @@ public class UpdateUserEndpoint : IEndpoint
 
         if (existingUser is null) return TypedResults.NotFound();
 
-        var updatedUser = request.MapToEntity(); // TODO: Map directly to the existing user entity for the change tracker to detect changes and save them.
-
-        //dbContext.Users.Update(updatedUser);
+        existingUser.UpdateUserWithRequest(request);
         await dbContext.SaveChangesAsync(cancellationToken); // Save tracked changes to the database
 
-        var response = updatedUser.MapToResponse();
-        return TypedResults.Ok(response);
+        return TypedResults.Ok(existingUser.MapToResponse());
     }
 }
