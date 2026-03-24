@@ -12,4 +12,5 @@ public record UpdateUserResponse(
     string FirstName,
     string LastName,
     string? DisplayName,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    DateTime? UpdatedAt);
