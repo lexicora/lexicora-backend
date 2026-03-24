@@ -16,6 +16,7 @@ internal class EntryConfiguration : IEntityTypeConfiguration<Entry>
 
             // Enforce max 10 tags per entry
             e.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
+            // Add check constraints to properties that have regex constraints in the app layer, to enforce data integrity at the database level as well. (for example slugs)
         }); // public For Supabase configuration
 
         builder.HasKey(e => e.Id);

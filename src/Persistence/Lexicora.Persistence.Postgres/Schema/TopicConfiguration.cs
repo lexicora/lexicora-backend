@@ -16,6 +16,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 
             // Enforce max 10 tags per topic
             t.HasCheckConstraint("CK_Tags_MaxCount", "cardinality(tags) <= 10");
+            // Add check constraints to properties that have regex constraints in the app layer, to enforce data integrity at the database level as well. (for example slugs)
         }); // public For Supabase configuration
 
         builder.HasKey(t => t.Id);
