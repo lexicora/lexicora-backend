@@ -33,7 +33,7 @@ public class UpdateUserEndpoint : IEndpoint
 
         if (existingUser is null) return TypedResults.NotFound();
 
-        existingUser.UpdateUserWithRequest(request);
+        existingUser.UpdateWithRequestData(request);
         await dbContext.SaveChangesAsync(cancellationToken); // Save tracked changes to the database
 
         return TypedResults.Ok(existingUser.MapToResponse());

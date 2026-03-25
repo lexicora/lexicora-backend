@@ -14,7 +14,7 @@ public static class UpdateUserMappers
         user.CreatedAt,
         user.UpdatedAt);
 
-    public static void UpdateUserWithRequest(this User user, UpdateUserRequest request)
+    public static void UpdateWithRequestData(this User user, UpdateUserRequest request)
     {
         user.Email = request.Email.ToLowerInvariant();
         user.Username = request.Username.ToLowerInvariant();
