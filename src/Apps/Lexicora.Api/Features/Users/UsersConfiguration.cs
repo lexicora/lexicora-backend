@@ -10,7 +10,7 @@ namespace Lexicora.Api.Features.Users;
 
 public class UsersConfiguration : IEndpointConfiguration
 {
-    public static void MapEndpoints(IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder, bool? isDevelopment = null)
     {
         var usersGroup = builder.MapGroup("/users")
             .WithTags("Users");
@@ -19,6 +19,7 @@ public class UsersConfiguration : IEndpointConfiguration
         GetUserByIdEndpoint.Map(usersGroup);
         GetUserByEmailEndpoint.Map(usersGroup);
         GetUserByUsernameEndpoint.Map(usersGroup);
+
 
         // CREATE (POST)
         CreateUserEndpoint.Map(usersGroup);

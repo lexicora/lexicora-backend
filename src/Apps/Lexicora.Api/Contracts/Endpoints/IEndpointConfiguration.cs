@@ -17,5 +17,6 @@ public interface IEndpointConfiguration
     /// or in a MapEndpoints method. (call it within this method implementation).
     /// </summary>
     /// <param name="builder">The root application or parent route group.</param>
-    static abstract void MapEndpoints(IEndpointRouteBuilder builder);
+    /// <param name="isDevelopment">Indicates whether the application is running in development environment.</param>
+    static abstract void MapEndpoints(IEndpointRouteBuilder builder, bool? isDevelopment = null);
 }

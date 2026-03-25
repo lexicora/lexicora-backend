@@ -5,7 +5,7 @@ namespace Lexicora.Api.Features.Topics;
 
 public class TopicsConfiguration : IEndpointConfiguration
 {
-    public static void MapEndpoints(IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder, bool? isDevelopment = null)
     {
         var topicsGroup = builder.MapGroup("/topics")
             .WithTags("Topics");
