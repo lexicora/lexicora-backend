@@ -2,7 +2,6 @@ using Dapper;
 
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Extensions;
-using Lexicora.Domain.Entities;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -45,13 +44,13 @@ public class GetUserByIdEndpoint : IEndpoint
                            WHERE id = @Id
                            """;
 
-        var user = await connection.QueryFirstOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<GetUserByIdResponse>(
             sql,
             new { Id = ulid.ToGuid() }
         );
 
         return user is not null
-            ? TypedResults.Ok(user.MapToResponse())
+            ? TypedResults.Ok(user)
             : TypedResults.NotFound();
     }
 }
