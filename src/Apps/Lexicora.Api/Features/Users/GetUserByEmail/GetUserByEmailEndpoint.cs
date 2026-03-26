@@ -4,7 +4,6 @@ using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Common;
 using Lexicora.Api.Infrastructure.Validation;
-using Lexicora.Domain.Entities;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -51,13 +50,13 @@ public class GetUserByEmailEndpoint : IEndpoint
                            WHERE email = @Email
                            """;
 
-        var user = await connection.QueryFirstOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<GetUserByEmailResponse>(
             sql,
             new { Email = email }
         );
 
         return user is not null
-            ? TypedResults.Ok(user.MapToResponse())
+            ? TypedResults.Ok(user)
             : TypedResults.NotFound();
     }
 }

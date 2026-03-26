@@ -4,7 +4,6 @@ using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Common;
 using Lexicora.Api.Infrastructure.Validation;
-using Lexicora.Domain.Entities;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -55,13 +54,13 @@ public class GetUserByUsernameEndpoint : IEndpoint
                            WHERE username = @Username
                            """;
 
-        var user = await connection.QueryFirstOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<GetUserByUsernameResponse>(
             sql,
             new { Username = username }
         );
 
         return user is not null
-            ? TypedResults.Ok(user.MapToResponse())
+            ? TypedResults.Ok(user)
             : TypedResults.NotFound();
     }
 }

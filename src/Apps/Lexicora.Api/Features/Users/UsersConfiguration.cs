@@ -1,6 +1,7 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Features.Users.CreateUser;
 using Lexicora.Api.Features.Users.DeleteUser;
+using Lexicora.Api.Features.Users.GetAllUsers;
 using Lexicora.Api.Features.Users.GetUserByEmail;
 using Lexicora.Api.Features.Users.GetUserById;
 using Lexicora.Api.Features.Users.GetUserByUsername;
@@ -20,7 +21,6 @@ public class UsersConfiguration : IEndpointConfiguration
         GetUserByEmailEndpoint.Map(usersGroup);
         GetUserByUsernameEndpoint.Map(usersGroup);
 
-
         // CREATE (POST)
         CreateUserEndpoint.Map(usersGroup);
 
@@ -29,5 +29,11 @@ public class UsersConfiguration : IEndpointConfiguration
 
         // DELETE
         DeleteUserEndpoint.Map(usersGroup);
+
+        // Development endpoints
+        if (isDevelopment == true)
+        {
+            GetAllUsersEndpoint.Map(usersGroup);
+        }
     }
 }

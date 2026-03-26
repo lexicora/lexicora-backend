@@ -1,7 +1,7 @@
 using Dapper;
 
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Domain.Entities;
+using Lexicora.Api.Infrastructure.Common;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -13,16 +13,24 @@ public class GetAllUsersEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder group)
     {
-        group.MapGet("/", HandleAsync)
+        group.MapGet("/all", HandleAsync)
             .WithName("GetAllUsers")
-            .WithTags("Users")
+            .WithTags("Users", "Development")
             .WithSummary("Get all users")
-            .WithDescription("Gets all users. This endpoint is intended for testing and development purposes only and should not be exposed in production environments.");
+            .WithDescription("Gets all users with an optional limit. The default limit is 1000. This endpoint is intended for testing and development purposes only and should not be exposed in production environments.");
     }
 
-    private static async Task<Ok<List<GetAllUsersResponse>>> HandleAsync(
-        NpgsqlDataSource dataSource, CancellationToken cancellationToken)
+    private static async Task<Results<Ok<GetAllUsersResponseCollection>, BadRequest<BadRequestResponse>>> HandleAsync(
+        int? limit, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
+        if (limit < 0)
+        {
+            return TypedResults.BadRequest(new BadRequestResponse
+            {
+                Detail = $"Invalid limit value: {limit}. Limit must be a non-negative integer."
+            });
+        }
+
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
 
         const string sql = """
@@ -38,13 +46,21 @@ public class GetAllUsersEndpoint : IEndpoint
                      entry_count AS "EntryCount",
                      topic_count AS "TopicCount"
                      FROM "public"."users"
+                     LIMIT @Limit
                      """;
 
-        var users = await connection.QueryAsync<User>(
-            sql
+        var users = await connection.QueryAsync<GetAllUsersResponse>(
+            sql,
+            new { Limit = limit ?? 1000 }
         );
 
-        var userList = new List<GetAllUsersResponse>();
-        return TypedResults.Ok(userList);
+        var userList = users.ToList();
+
+        var response = new GetAllUsersResponseCollection(
+            TotalCount: userList.Count,
+            Users: userList
+        );
+
+        return TypedResults.Ok(response);
     }
 }

@@ -5,8 +5,8 @@ using Lexicora.Api.Infrastructure.Json.Converters;
 namespace Lexicora.Api.Features.Users.GetAllUsers;
 
 public record GetAllUsersResponse(
-    [property: JsonConverter(typeof(LowercaseUlidJsonConverter))]
-    Ulid Id,
+    [property: JsonIgnore]
+    Guid Id,
     string Email,
     string Username,
     string FirstName,
@@ -16,4 +16,13 @@ public record GetAllUsersResponse(
     DateTime? UpdatedAt,
     int EntryCount,
     int TopicCount
-);
+)
+{
+    [JsonPropertyName("id")]
+    [JsonConverter(typeof(LowercaseUlidJsonConverter))]
+    public Ulid UlidId => Ulid.New(Id);
+}
+
+public record GetAllUsersResponseCollection(
+    int TotalCount,
+    List<GetAllUsersResponse> Users);

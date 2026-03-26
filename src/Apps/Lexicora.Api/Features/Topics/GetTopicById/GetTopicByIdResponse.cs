@@ -5,8 +5,8 @@ using Lexicora.Api.Infrastructure.Json.Converters;
 namespace Lexicora.Api.Features.Topics.GetTopicById;
 
 public record GetTopicByIdResponse(
-    [property: JsonConverter(typeof(LowercaseUlidJsonConverter))]
-    Ulid Id,
+    [property: JsonIgnore]
+    Guid Id,
     string Name,
     string? Description,
     bool IsFavorite,
@@ -14,6 +14,11 @@ public record GetTopicByIdResponse(
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     int EntryCount
-);
+)
+{
+    [JsonPropertyName("id")]
+    [JsonConverter(typeof(LowercaseUlidJsonConverter))]
+    public Ulid UlidId => Ulid.New(Id);
+}
 
 // DateTime was DateTimeOffset, but changed for compatibility.
