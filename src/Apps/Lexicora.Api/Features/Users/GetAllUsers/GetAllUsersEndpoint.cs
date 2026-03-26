@@ -63,4 +63,8 @@ public class GetAllUsersEndpoint : IEndpoint
 
         return TypedResults.Ok(response);
     }
+    /*
+     * TODO: Consider tailored endpoints for specific cases to be used in production.
+     * Examples: Look at GitHub issue: https://github.com/lexicora/lexicora-backend/issues/19
+     */
 }
