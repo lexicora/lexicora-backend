@@ -2,10 +2,10 @@ using Dapper;
 
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Extensions;
-using Lexicora.Api.Infrastructure.Common;
 using Lexicora.Api.Infrastructure.Validation;
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 using Npgsql;
 
@@ -24,16 +24,22 @@ public class GetUserByUsernameEndpoint : IEndpoint
                                       "Regex pattern: `^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$`");
     }
 
-    private static async Task<Results<Ok<GetUserByUsernameResponse>, NotFound, BadRequest<BadRequestResponse>>> HandleAsync(
+    private static async Task<Results<Ok<GetUserByUsernameResponse>, NotFound, BadRequest<ProblemDetails>>> HandleAsync(
         string username, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         // Maybe implement validation only partially in regex for performance 
         if (!RouteVariables.IsValidUsername(username))
         {
-            return TypedResults.BadRequest(new BadRequestResponse(
-                $"The value '{username}' is not a valid Username.",
-                "Valid Username must be between 3 and 30 characters and can contain letters, numbers, underscores and dots. It may not start with special characters. " +
-                "Regex pattern: ^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$"));
+            return TypedResults.BadRequest(new ProblemDetails
+            {
+                Title = "Invalid Username",
+                Detail = $"The value '{username}' is not a valid Username.",
+                Extensions =
+                {
+                    ["ValidUsernamePattern"] = "^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$",
+                    ["ValidUsernameDescription"] = "Valid Username must be between 3 and 30 characters and can contain letters, numbers, underscores and dots. It may not start with special characters."
+                }
+            });
         }
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
