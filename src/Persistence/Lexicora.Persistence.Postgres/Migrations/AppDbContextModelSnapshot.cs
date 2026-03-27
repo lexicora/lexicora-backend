@@ -137,7 +137,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         .HasColumnType("character varying(1000)")
                         .HasColumnName("path_url");
 
-                    b.Property<DateTimeOffset?>("PublishedAt")
+                    b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("published_at");
 
