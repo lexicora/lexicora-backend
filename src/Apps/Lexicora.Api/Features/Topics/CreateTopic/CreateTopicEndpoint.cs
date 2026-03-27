@@ -4,7 +4,6 @@ using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Lexicora.Api.Features.Topics.CreateTopic;
 
@@ -28,8 +27,8 @@ public class CreateTopicEndpoint : IEndpoint
     {
         var userId = Ulid.Parse(request.UserId);
 
-        var userExists = await dbContext.Users.AnyAsync(u => u.Id == userId.ToGuid(), cancellationToken);
-        if (!userExists)
+        var user = await dbContext.Users.FindAsync([userId.ToGuid()], cancellationToken);
+        if (user is null)
         {
             return TypedResults.BadRequest(new ProblemDetails
             {
@@ -40,6 +39,8 @@ public class CreateTopicEndpoint : IEndpoint
         }
 
         var topic = request.MapToEntity();
+
+        user.TopicCount++;
 
         dbContext.Topics.Add(topic);
         await dbContext.SaveChangesAsync(cancellationToken);

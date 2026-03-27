@@ -28,6 +28,7 @@ public class Program
         {
             Monotonicity = Ulid.GenerationOptions.MonotonicityOptions.NonMonotonic
             // Important for slug time parts (ulidString[..12]) time + 2 random chars.
+            // Maybe switch to 4 byte monotonic, if using the last 10 or 12 characters for slugs.
 
             // Both below are the default RandomSources, so no need to manually set them.
             //InitialRandomSource = new CryptographicallySecureRandomProvider(),

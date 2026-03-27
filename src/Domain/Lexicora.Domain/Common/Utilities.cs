@@ -10,7 +10,6 @@ public static class Utilities
         const int suffixLength = 12;
 
         // Safely extract suffix length without throwing an exception.
-        // Tip: Using the end of a ULID gives better uniqueness (randomness) than the start (timestamp).
         ReadOnlySpan<char> ulidSpan = ulidString.AsSpan();
         if (ulidSpan.Length > suffixLength)
         {
