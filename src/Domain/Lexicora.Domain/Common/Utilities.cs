@@ -1,10 +1,10 @@
 namespace Lexicora.Domain.Common;
 
-public class SlugUtilities
+public static class Utilities
 {
     public static string CreateSlug(string title, string ulidString)
     {
-        if (string.IsNullOrWhiteSpace(title)) return ulidString?.ToLowerInvariant() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(title)) return ulidString.ToLowerInvariant();
 
         const int maxTitleLength = 87;
         const int suffixLength = 12;
