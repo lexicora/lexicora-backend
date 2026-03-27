@@ -4,6 +4,7 @@ using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lexicora.Api.Features.Topics.CreateTopic;
 
@@ -20,11 +21,23 @@ public class CreateTopicEndpoint : IEndpoint
             .AddEndpointFilter<ValidationFilter<CreateTopicRequest>>();
     }
 
-    private static async Task<Results<Created<CreateTopicResponse>, Conflict<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<Created<CreateTopicResponse>, BadRequest<ProblemDetails>>> HandleAsync(
         [FromBody] CreateTopicRequest request,
         AppDbContext dbContext,
         CancellationToken cancellationToken)
     {
+        var userId = Ulid.Parse(request.UserId);
+
+        var userExists = await dbContext.Users.AnyAsync(u => u.Id == userId.ToGuid(), cancellationToken);
+        if (!userExists)
+        {
+            return TypedResults.BadRequest(new ProblemDetails
+            {
+                Title = "Invalid User",
+                Detail = $"User with ID: '{request.UserId}' does not exist.",
+                Status = StatusCodes.Status400BadRequest
+            });
+        }
 
         var topic = request.MapToEntity();
 

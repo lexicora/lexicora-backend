@@ -2,7 +2,7 @@ namespace Lexicora.Domain.Entities;
 
 public class Topic()
 {
-    public Topic(Guid id, Guid userId, string slug, string name, List<string> tags, string? description = null, bool isFavorite = false)
+    public Topic(Guid id, Guid userId, string slug, string name, string? description, List<string> tags, bool isFavorite = false)
         : this()
     {
         Id = id;

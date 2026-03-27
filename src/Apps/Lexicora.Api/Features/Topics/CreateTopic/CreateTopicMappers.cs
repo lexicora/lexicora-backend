@@ -9,17 +9,14 @@ public static class CreateTopicMappers
     {
         var id = Ulid.New();
 
-        return new Topic
-        {
-            Id = id.ToGuid(),
-            UserId = request.UserId.ToGuid(),
-            Slug = Utilities.CreateSlug(request.Name, id.ToString()),
-            Name = request.Name.Trim(),
-            Description = request.Description?.Trim(),
-            Tags = request.Tags,
-            //IsFavorite = false,
-            CreatedAt = DateTime.UtcNow
-        };
+        return new Topic(
+            id.ToGuid(),
+            Ulid.Parse(request.UserId).ToGuid(), // Should be safe, since we validate this in the request validation.
+            Utilities.CreateSlug(request.Name, id.ToString()),
+            request.Name.Trim(),
+            request.Description?.Trim(),
+            request.Tags,
+            request.IsFavorite);
     }
 
     public static CreateTopicResponse MapToResponse(this Topic topic) => new(

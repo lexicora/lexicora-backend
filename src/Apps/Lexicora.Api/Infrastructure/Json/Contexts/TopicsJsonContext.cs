@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 
+using Lexicora.Api.Features.Topics.CreateTopic;
 using Lexicora.Api.Features.Topics.GetTopicById;
 
 namespace Lexicora.Api.Infrastructure.Json.Contexts;
@@ -14,5 +15,7 @@ namespace Lexicora.Api.Infrastructure.Json.Contexts;
     WriteIndented = false)]
 #endif
 [JsonSerializable(typeof(GetTopicByIdResponse))]
+[JsonSerializable(typeof(CreateTopicRequest))]
+[JsonSerializable(typeof(CreateTopicResponse))]
 //[JsonSerializable(typeof(Ok<GetTopicByIdResponse>))]
 internal partial class TopicsJsonContext : JsonSerializerContext;
