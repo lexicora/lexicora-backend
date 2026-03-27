@@ -1,7 +1,19 @@
 namespace Lexicora.Domain.Entities;
 
-public class User
+public class User()
 {
+    public User(Guid id, string email, string username, string firstName, string lastName, string? displayName = null)
+        : this()
+    {
+        Id = id;
+        Email = email;
+        Username = username;
+        FirstName = firstName;
+        LastName = lastName;
+        DisplayName = displayName;
+        CreatedAt = DateTime.UtcNow;
+    }
+
     public Guid Id { get; set; } // = Ulid.NewUlid().ToGuid(); // Matches Supabase Auth UUID, let supabase handle id gen?
     public string Email { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
