@@ -42,17 +42,17 @@ public class GetUserByEmailEndpoint : IEndpoint
 
         const string sql = """
                            SELECT 
-                           id AS "Id",
-                           email AS "Email",
-                           username AS "Username",
-                           first_name AS "FirstName",
-                           last_name AS "LastName",
-                           display_name AS "DisplayName",
-                           created_at AS "CreatedAt",
-                           updated_at AS "UpdatedAt",
-                           entry_count AS "EntryCount",
-                           topic_count AS "TopicCount"
-                           FROM "public"."users"
+                           id AS Id,
+                           email AS Email,
+                           username AS Username,
+                           first_name AS FirstName,
+                           last_name AS LastName,
+                           display_name AS DisplayName,
+                           created_at AS CreatedAt,
+                           updated_at AS UpdatedAt,
+                           entry_count AS EntryCount,
+                           topic_count AS TopicCount
+                           FROM public.users
                            WHERE email = @Email::citext
                            """;
 

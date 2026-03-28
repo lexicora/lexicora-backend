@@ -29,17 +29,17 @@ public class GetTopicBySlugEndpoint : IEndpoint
 
         const string sql = """
                            SELECT 
-                               id AS "Id",
-                               user_id AS "UserId",
-                               slug AS "Slug",
-                               name AS "Name", 
-                               description AS "Description",
-                               is_favorite AS "IsFavorite",
-                               tags AS "Tags",
-                               created_at AS "CreatedAt", 
-                               updated_at AS "UpdatedAt",
-                               entry_count AS "EntryCount"
-                           FROM "public"."topics"
+                           id AS Id,
+                           user_id AS UserId,
+                           slug AS Slug,
+                           name AS Name, 
+                           description AS Description,
+                           is_favorite AS IsFavorite,
+                           tags AS Tags,
+                           created_at AS CreatedAt, 
+                           updated_at AS UpdatedAt,
+                           entry_count AS EntryCount
+                           FROM public.topics
                            WHERE slug = @Slug::citext
                            """;
 
