@@ -15,7 +15,7 @@ public class GetAllUsersEndpoint : IEndpoint
     {
         group.MapGet("/all", HandleAsync)
             .WithName("GetAllUsers")
-            .WithTags("Users", "Development")
+            .WithTags("Development")
             .WithSummary("Get all users")
             .WithDescription("Gets all users with an optional limit. The default limit is 1000. This endpoint is intended for testing and development purposes only and should not be exposed in production environments.");
     }
@@ -58,10 +58,7 @@ public class GetAllUsersEndpoint : IEndpoint
 
         var userList = users.AsList();
 
-        var response = new GetAllUsersResponseCollection(
-            TotalCount: userList.Count,
-            Users: userList
-        );
+        var response = new GetAllUsersResponseCollection(userList);
 
         return TypedResults.Ok(response);
     }
