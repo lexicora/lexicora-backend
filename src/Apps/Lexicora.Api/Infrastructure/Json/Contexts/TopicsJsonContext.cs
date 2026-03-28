@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 using Lexicora.Api.Features.Topics.CreateTopic;
 using Lexicora.Api.Features.Topics.GetTopicById;
+using Lexicora.Api.Features.Topics.GetTopicBySlug;
 
 namespace Lexicora.Api.Infrastructure.Json.Contexts;
 
@@ -14,8 +15,9 @@ namespace Lexicora.Api.Infrastructure.Json.Contexts;
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     WriteIndented = false)]
 #endif
-[JsonSerializable(typeof(GetTopicByIdResponse))]
 [JsonSerializable(typeof(CreateTopicRequest))]
 [JsonSerializable(typeof(CreateTopicResponse))]
+[JsonSerializable(typeof(GetTopicByIdResponse))]
+[JsonSerializable(typeof(GetTopicBySlugResponse))]
 //[JsonSerializable(typeof(Ok<GetTopicByIdResponse>))]
 internal partial class TopicsJsonContext : JsonSerializerContext;

@@ -72,7 +72,7 @@ public class Program
             options.ConstraintMap.Add("email", typeof(EmailConstraint));
             options.ConstraintMap.Add("ulid", typeof(UlidConstraint));
             options.ConstraintMap.Add("username", typeof(UsernameConstraint));
-            //options.ConstraintMap.Add("slug", typeof(SlugConstraint));
+            options.ConstraintMap.Add("slug", typeof(SlugConstraint));
         });
 
         builder.Services.AddProblemDetails(options =>

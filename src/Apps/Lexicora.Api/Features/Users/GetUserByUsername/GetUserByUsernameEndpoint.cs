@@ -57,7 +57,7 @@ public class GetUserByUsernameEndpoint : IEndpoint
                            entry_count AS "EntryCount",
                            topic_count AS "TopicCount"
                            FROM "public"."users"
-                           WHERE username = @Username
+                           WHERE username = @Username::citext
                            """;
 
         var user = await connection.QueryFirstOrDefaultAsync<GetUserByUsernameResponse>(

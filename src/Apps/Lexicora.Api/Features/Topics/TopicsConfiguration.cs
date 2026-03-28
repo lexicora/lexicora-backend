@@ -1,6 +1,7 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Features.Topics.CreateTopic;
 using Lexicora.Api.Features.Topics.GetTopicById;
+using Lexicora.Api.Features.Topics.GetTopicBySlug;
 
 namespace Lexicora.Api.Features.Topics;
 
@@ -14,6 +15,7 @@ public class TopicsConfiguration : IEndpointConfiguration
 
         // READ (GET)
         GetTopicByIdEndpoint.Map(topicsGroup);
+        GetTopicBySlugEndpoint.Map(topicsGroup);
 
         // CREATE (POST)
         CreateTopicEndpoint.Map(topicsGroup);

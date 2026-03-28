@@ -53,7 +53,7 @@ public class GetUserByEmailEndpoint : IEndpoint
                            entry_count AS "EntryCount",
                            topic_count AS "TopicCount"
                            FROM "public"."users"
-                           WHERE email = @Email
+                           WHERE email = @Email::citext
                            """;
 
         var user = await connection.QueryFirstOrDefaultAsync<GetUserByEmailResponse>(
