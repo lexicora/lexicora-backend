@@ -56,7 +56,7 @@ public class GetAllUsersEndpoint : IEndpoint
             new { Limit = limit ?? 1000 }
         );
 
-        var userList = users.ToList();
+        var userList = users.AsList();
 
         var response = new GetAllUsersResponseCollection(
             TotalCount: userList.Count,
