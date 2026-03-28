@@ -201,7 +201,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         {
                             t.HasComment("Represents a saved web page or article with metadata and content blocks.");
 
-                            t.HasCheckConstraint("CK_entries_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
+                            t.HasCheckConstraint("CK_entries_slug_valid", "slug ~* '^([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}|[a-zA-Z0-9]{26})$' AND LENGTH(slug) <= 100");
 
                             t.HasCheckConstraint("CK_entries_tags_max_count", "cardinality(tags) <= 10");
                         });
@@ -278,7 +278,7 @@ namespace Lexicora.Persistence.Postgres.Migrations
                         {
                             t.HasComment("Topics are user-defined collections of entries. They allow users to organize their saved web pages into meaningful groups. Each topic has a name, description, and tags for categorization. The EntryCount property keeps track of how many entries are in the topic, which can be useful for displaying topic summaries without needing to load all entries.");
 
-                            t.HasCheckConstraint("CK_topics_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
+                            t.HasCheckConstraint("CK_topics_slug_valid", "slug ~* '^([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}|[a-zA-Z0-9]{26})$' AND LENGTH(slug) <= 100");
 
                             t.HasCheckConstraint("CK_topics_tags_max_count", "cardinality(tags) <= 10");
                         });
