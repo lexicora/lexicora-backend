@@ -26,9 +26,10 @@ public static class Utilities
         {
             if (pos >= maxTitleLength) break;
 
-            if (char.IsLetterOrDigit(c))
+            if (char.IsAsciiLetterOrDigit(c))
             {
                 buffer[pos++] = char.ToLowerInvariant(c);
+                // If casing should be preserved, remove ToLowerInvariant
             }
             else if (c is ' ' or '-' or '_')
             {
@@ -46,11 +47,15 @@ public static class Utilities
             pos--;
         }
 
-        // Add the separator between title and suffix if we actually parsed title characters
-        if (pos > 0)
+        // FALLBACK: If the title contained only ignored characters (e.g., purely Chinese characters),
+        // pos will be 0. We default to returning just the ULID.
+        if (pos == 0)
         {
-            buffer[pos++] = '-';
+            return ulidString.ToLowerInvariant();
         }
+
+        // Add the separator between title and suffix
+        buffer[pos++] = '-';
 
         // Append the ULID suffix
         for (int i = 0; i < ulidSpan.Length; i++)
