@@ -21,11 +21,13 @@ public static class UpdateTopicMappers
 
         public void UpdateWithRequestData(UpdateTopicRequest request)
         {
-            topic.Slug = Utilities.CreateSlug(request.Name, topic.Id.ToString());
+            var topicId = Ulid.New(topic.Id);
+
+            topic.Slug = Utilities.CreateSlug(request.Name, topicId.ToString());
             topic.Name = request.Name.Trim();
             topic.Description = request.Description?.Trim();
-            topic.Tags = request.Tags;
             topic.IsFavorite = request.IsFavorite;
+            topic.Tags = request.Tags;
             topic.UpdatedAt = DateTime.UtcNow;
         }
     }

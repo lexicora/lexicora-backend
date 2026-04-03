@@ -2,7 +2,7 @@ namespace Lexicora.Domain.Common;
 
 public static class Utilities
 {
-    public static string CreateSlug(string title, string ulidString)
+    public static string CreateSlug(string title, string ulidString) // UUID string would be valid too and works too.
     {
         if (string.IsNullOrWhiteSpace(title)) return ulidString.ToLowerInvariant();
 
