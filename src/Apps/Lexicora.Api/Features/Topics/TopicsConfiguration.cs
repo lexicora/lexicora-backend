@@ -13,17 +13,16 @@ public class TopicsConfiguration : IEndpointConfiguration
 {
     public static void MapEndpoints(IEndpointRouteBuilder builder, bool? isDevelopment = null)
     {
-        var topicsGroup = builder.MapGroup("/topics")
-            .WithTags("Topics");
+        var topicsGroup = builder.MapGroup("/topics").WithTags("Topics");
         //.AddEndpointFilter<UlidIdValidationFilter>();
+
+        // CREATE (POST)
+        CreateTopicEndpoint.Map(topicsGroup);
 
         // READ (GET)
         GetTopicByIdEndpoint.Map(topicsGroup);
         GetTopicBySlugEndpoint.Map(topicsGroup);
         GetTopicsByUserIdEndpoint.Map(topicsGroup);
-
-        // CREATE (POST)
-        CreateTopicEndpoint.Map(topicsGroup);
 
         // UPDATE (PUT/PATCH)
         UpdateTopicEndpoint.Map(topicsGroup);
