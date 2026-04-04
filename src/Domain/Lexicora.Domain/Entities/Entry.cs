@@ -1,8 +1,35 @@
 namespace Lexicora.Domain.Entities;
 
-public class Entry
+public class Entry()
 {
-    public Guid Id { get; set; } = Ulid.New().ToGuid(); // Faster than Guid.CreateVersion7()
+    public Entry(Guid id, Guid userId, Guid topicId, string slug, string title, string? description, List<string> tags,
+        string? faviconUrl, string url, string originUrl, string? pathUrl, string languageCode,
+        string? siteName, string? excerpt, string? byline, DateTime? publishedAt, bool isFavorite = false)
+        : this()
+    {
+        Id = id;
+        UserId = userId;
+        TopicId = topicId;
+
+        Slug = slug;
+        Title = title;
+        Description = description;
+        Tags = tags;
+        IsFavorite = isFavorite;
+        FaviconUrl = faviconUrl;
+        Url = url;
+        OriginUrl = originUrl;
+        PathUrl = pathUrl;
+        LanguageCode = languageCode;
+        CreatedAt = DateTime.UtcNow;
+
+        SiteName = siteName;
+        Excerpt = excerpt;
+        Byline = byline;
+        PublishedAt = publishedAt;
+    }
+
+    public Guid Id { get; set; } // = Ulid.New().ToGuid(); // Faster than Guid.CreateVersion7()
     public Guid UserId { get; set; }
     public Guid TopicId { get; set; }
 
@@ -10,7 +37,7 @@ public class Entry
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
     public List<string> Tags { get; set; } = new(10); // max 50 chars per tag, max 10 tags per entry (db enforced)
-    public bool IsFavorite { get; set; } = false;
+    public bool IsFavorite { get; set; }
     public string? FaviconUrl { get; set; }
     public string Url { get; set; } = string.Empty; // maps to location.href or baseUri
     public string OriginUrl { get; set; } = string.Empty; // The original URL before any redirects (if available)
@@ -23,7 +50,7 @@ public class Entry
     public string? SiteName { get; set; }
     public string? Excerpt { get; set; }
     public string? Byline { get; set; } // Author or source of the content
-    public DateTimeOffset? PublishedAt { get; set; } // When the article was published
+    public DateTime? PublishedAt { get; set; } // When the article was published
 
     // Navigation
     public User? User { get; set; }

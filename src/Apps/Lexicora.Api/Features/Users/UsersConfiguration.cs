@@ -31,7 +31,7 @@ public class UsersConfiguration : IEndpointConfiguration
         DeleteUserEndpoint.Map(usersGroup);
 
         // Development endpoints
-        if (isDevelopment == true)
+        if (isDevelopment is true)
         {
             GetAllUsersEndpoint.Map(usersGroup);
         }

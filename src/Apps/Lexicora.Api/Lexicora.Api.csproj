@@ -33,4 +33,8 @@
     <ProjectReference Include="..\..\Persistence\Lexicora.Persistence.Postgres\Lexicora.Persistence.Postgres.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Common\" />
+  </ItemGroup>
+
 </Project>

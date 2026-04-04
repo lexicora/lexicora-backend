@@ -4,16 +4,14 @@ namespace Lexicora.Api.Features.Users.CreateUser;
 
 public static class CreateUserMappers
 {
-    public static User MapToEntity(this CreateUserRequest request /*Ulid ulid*/) => new()
-    {
-        Id = Ulid.New().ToGuid(),
-        Email = request.Email.ToLowerInvariant(),
-        Username = request.Username.ToLowerInvariant(),
-        FirstName = request.FirstName.Trim(),
-        LastName = request.LastName.Trim(),
-        DisplayName = request.DisplayName?.Trim(),
-        CreatedAt = DateTime.UtcNow
-    };
+    public static User MapToEntity(this CreateUserRequest request /*Ulid ulid*/) => new(
+        Ulid.New().ToGuid(),
+        request.Email.ToLowerInvariant(),
+        request.Username.ToLowerInvariant(),
+        request.FirstName.Trim(),
+        request.LastName.Trim(),
+        request.DisplayName?.Trim()
+    );
 
     public static CreateUserResponse MapToResponse(this User user /*Ulid ulid*/) => new(
         Ulid.New(user.Id),

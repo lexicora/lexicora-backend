@@ -7,10 +7,14 @@ namespace Lexicora.Api.Features.Topics.GetTopicById;
 public record GetTopicByIdResponse(
     [property: JsonIgnore]
     Guid Id,
+
+    [property: JsonIgnore]
+    Guid UserId,
+    string Slug,
     string Name,
     string? Description,
     bool IsFavorite,
-    List<string> Tags,
+    string[] Tags,
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     int EntryCount
@@ -19,6 +23,10 @@ public record GetTopicByIdResponse(
     [JsonPropertyName("id")]
     [JsonConverter(typeof(LowercaseUlidJsonConverter))]
     public Ulid UlidId => Ulid.New(Id);
+
+    [JsonPropertyName("userId")]
+    [JsonConverter(typeof(LowercaseUlidJsonConverter))]
+    public Ulid UlidUserId => Ulid.New(UserId);
 }
 
 // DateTime was DateTimeOffset, but changed for compatibility.

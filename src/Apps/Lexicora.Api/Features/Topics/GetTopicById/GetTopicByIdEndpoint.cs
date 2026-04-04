@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 using Npgsql;
 
-using Scalar.AspNetCore;
-
 namespace Lexicora.Api.Features.Topics.GetTopicById;
 
 public class GetTopicByIdEndpoint : IEndpoint
@@ -33,15 +31,17 @@ public class GetTopicByIdEndpoint : IEndpoint
 
         const string sql = """
                            SELECT 
-                               id AS "Id",
-                               name AS "Name", 
-                               description AS "Description",
-                               is_favorite AS "IsFavorite",
-                               tags AS "Tags",
-                               created_at AS "CreatedAt", 
-                               updated_at AS "UpdatedAt",
-                               entry_count AS "EntryCount"
-                           FROM "public"."topics"
+                           id AS Id,
+                           user_id AS UserId,
+                           slug AS Slug,
+                           name AS Name, 
+                           description AS Description,
+                           is_favorite AS IsFavorite,
+                           tags AS Tags,
+                           created_at AS CreatedAt, 
+                           updated_at AS UpdatedAt,
+                           entry_count AS EntryCount
+                           FROM public.topics
                            WHERE id = @Id
                            """;
 

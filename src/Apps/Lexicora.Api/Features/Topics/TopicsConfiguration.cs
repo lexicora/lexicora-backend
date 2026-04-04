@@ -1,5 +1,11 @@
 using Lexicora.Api.Contracts.Endpoints;
+using Lexicora.Api.Features.Topics.CreateTopic;
+using Lexicora.Api.Features.Topics.DeleteTopic;
+using Lexicora.Api.Features.Topics.GetAllTopics;
 using Lexicora.Api.Features.Topics.GetTopicById;
+using Lexicora.Api.Features.Topics.GetTopicBySlug;
+using Lexicora.Api.Features.Topics.GetTopicsByUserId;
+using Lexicora.Api.Features.Topics.UpdateTopic;
 
 namespace Lexicora.Api.Features.Topics;
 
@@ -13,11 +19,22 @@ public class TopicsConfiguration : IEndpointConfiguration
 
         // READ (GET)
         GetTopicByIdEndpoint.Map(topicsGroup);
+        GetTopicBySlugEndpoint.Map(topicsGroup);
+        GetTopicsByUserIdEndpoint.Map(topicsGroup);
 
         // CREATE (POST)
+        CreateTopicEndpoint.Map(topicsGroup);
 
         // UPDATE (PUT/PATCH)
+        UpdateTopicEndpoint.Map(topicsGroup);
 
         // DELETE
+        DeleteTopicEndpoint.Map(topicsGroup);
+
+        // Development Endpoints
+        if (isDevelopment is true)
+        {
+            GetAllTopicsEndpoint.Map(topicsGroup);
+        }
     }
 }

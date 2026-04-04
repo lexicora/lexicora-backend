@@ -1,9 +1,9 @@
 using Dapper;
 
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Api.Infrastructure.Common;
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 using Npgsql;
 
@@ -15,19 +15,21 @@ public class GetAllUsersEndpoint : IEndpoint
     {
         group.MapGet("/all", HandleAsync)
             .WithName("GetAllUsers")
-            .WithTags("Users", "Development")
+            .WithTags("Development")
             .WithSummary("Get all users")
             .WithDescription("Gets all users with an optional limit. The default limit is 1000. This endpoint is intended for testing and development purposes only and should not be exposed in production environments.");
     }
 
-    private static async Task<Results<Ok<GetAllUsersResponseCollection>, BadRequest<BadRequestResponse>>> HandleAsync(
+    private static async Task<Results<Ok<GetAllUsersResponseCollection>, BadRequest<ProblemDetails>>> HandleAsync(
         int? limit, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         if (limit < 0)
         {
-            return TypedResults.BadRequest(new BadRequestResponse
+            return TypedResults.BadRequest(new ProblemDetails
             {
-                Detail = $"Invalid limit value: {limit}. Limit must be a non-negative integer."
+                Title = "Invalid Limit",
+                Detail = $"Invalid limit value: '{limit}'. Limit must be a non-negative integer.",
+                Status = StatusCodes.Status400BadRequest,
             });
         }
 
@@ -35,17 +37,17 @@ public class GetAllUsersEndpoint : IEndpoint
 
         const string sql = """
                      SELECT 
-                     id AS "Id",
-                     email AS "Email",
-                     username AS "Username",
-                     first_name AS "FirstName",
-                     last_name AS "LastName",
-                     display_name AS "DisplayName",
-                     created_at AS "CreatedAt",
-                     updated_at AS "UpdatedAt",
-                     entry_count AS "EntryCount",
-                     topic_count AS "TopicCount"
-                     FROM "public"."users"
+                     id AS Id,
+                     email AS Email,
+                     username AS Username,
+                     first_name AS FirstName,
+                     last_name AS LastName,
+                     display_name AS DisplayName,
+                     created_at AS CreatedAt,
+                     updated_at AS UpdatedAt,
+                     entry_count AS EntryCount,
+                     topic_count AS TopicCount
+                     FROM public.users
                      LIMIT @Limit
                      """;
 
@@ -54,12 +56,9 @@ public class GetAllUsersEndpoint : IEndpoint
             new { Limit = limit ?? 1000 }
         );
 
-        var userList = users.ToList();
+        var userList = users.AsList();
 
-        var response = new GetAllUsersResponseCollection(
-            TotalCount: userList.Count,
-            Users: userList
-        );
+        var response = new GetAllUsersResponseCollection(userList);
 
         return TypedResults.Ok(response);
     }

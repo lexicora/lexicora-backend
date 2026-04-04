@@ -24,5 +24,9 @@ public record GetAllUsersResponse(
 }
 
 public record GetAllUsersResponseCollection(
-    int TotalCount,
-    List<GetAllUsersResponse> Users);
+    [property: JsonPropertyOrder(1)]
+    List<GetAllUsersResponse> Users)
+{
+    [JsonPropertyOrder(0)]
+    public int TotalCount => Users.Count;
+}

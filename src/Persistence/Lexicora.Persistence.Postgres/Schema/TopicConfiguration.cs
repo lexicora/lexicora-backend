@@ -16,7 +16,7 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
 
             // Enforce max 10 tags per topic
             t.HasCheckConstraint("CK_topics_tags_max_count", "cardinality(tags) <= 10");
-            t.HasCheckConstraint("CK_topics_slug_valid", "slug ~* '^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}$' AND LENGTH(slug) <= 100");
+            t.HasCheckConstraint("CK_topics_slug_valid", "slug ~* '^([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-[a-zA-Z0-9]{12}|[a-zA-Z0-9]{26})$' AND LENGTH(slug) <= 100");
         }); // public For Supabase configuration
 
         builder.HasKey(t => t.Id);
