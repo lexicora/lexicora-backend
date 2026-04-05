@@ -1,4 +1,5 @@
 using Lexicora.Api.Contracts.Endpoints;
+using Lexicora.Api.Features.Entries.CreateEntry;
 
 namespace Lexicora.Api.Features.Entries;
 
@@ -9,7 +10,7 @@ public class EntriesConfiguration : IEndpointConfiguration
         var entriesGroup = builder.MapGroup("/entries").WithTags("Entries");
 
         // CREATE (POST)
-        //CreateEntryEndpoint.Map(entriesGroup);
+        CreateEntryEndpoint.Map(entriesGroup);
 
         // READ (GET)
         //GetEntryByIdEndpoint.Map(entriesGroup);
