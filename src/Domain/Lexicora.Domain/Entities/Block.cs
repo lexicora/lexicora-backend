@@ -1,11 +1,28 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 using Lexicora.Domain.Serialization;
 
 namespace Lexicora.Domain.Entities;
 
-public class Block
+public class Block()
 {
+    [SetsRequiredMembers]
+    public Block(Guid id, Guid entryId, Guid? parentBlockId,
+        double order, string type, JsonElement propsJson, JsonElement? contentJson,
+        List<Block>? children = null) : this()
+    {
+        Id = id;
+        EntryId = entryId;
+        ParentBlockId = parentBlockId;
+
+        Order = order;
+        Type = type;
+        PropsJson = propsJson;
+        ContentJson = contentJson;
+        Children = children ?? [];
+    }
+
     public Guid Id { get; set; } // = Ulid.NewUlid().ToGuid(); // Part of actual BlockNote schema.
     public Guid EntryId { get; set; }
     public Guid? ParentBlockId { get; set; }

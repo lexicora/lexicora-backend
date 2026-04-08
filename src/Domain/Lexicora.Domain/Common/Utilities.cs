@@ -1,7 +1,16 @@
 namespace Lexicora.Domain.Common;
 
+/// <summary>
+/// Utility class for common helper methods used across the domain layer. This includes methods for creating URL-friendly slugs from entry titles, among other potential utilities that may be added in the future.
+/// </summary>
 public static class Utilities
 {
+    /// <summary>
+    /// Creates a URL-friendly slug from the given title and appends a unique suffix derived from the provided ULID string.
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="ulidString"></param>
+    /// <returns></returns>
     public static string CreateSlug(string title, string ulidString) // UUID string would be valid too and works too.
     {
         if (string.IsNullOrWhiteSpace(title)) return ulidString.ToLowerInvariant();

@@ -4,8 +4,7 @@ using System.Text.Json;
 namespace Lexicora.Api.Features.Entries._Shared;
 
 public record FlatBlock(
-    [property: Required]
-    string Id,
+    string? Id,
 
     [property: Required]
     string Type,
