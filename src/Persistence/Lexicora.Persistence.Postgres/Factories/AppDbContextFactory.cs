@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Lexicora.Persistence.Postgres.Factories;
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+internal class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {

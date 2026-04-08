@@ -51,6 +51,7 @@ public record CreateEntryRequest(
 
     DateTime? PublishedAt = null,
 
-    bool IsFavorite = false
-    //TODO: List blocks
+    bool IsFavorite = false,
+
+    List<FlatBlock>? Blocks = null
     );

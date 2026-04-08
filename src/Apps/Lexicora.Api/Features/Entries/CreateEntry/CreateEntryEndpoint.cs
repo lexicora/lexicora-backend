@@ -1,5 +1,6 @@
 using Lexicora.Api.Contracts.Endpoints;
 using Lexicora.Api.Infrastructure.Filters;
+using Lexicora.Persistence.Postgres;
 
 namespace Lexicora.Api.Features.Entries.CreateEntry;
 
@@ -16,8 +17,9 @@ public class CreateEntryEndpoint : IEndpoint
             .AddEndpointFilter<ValidationFilter<CreateEntryRequest>>();
     }
 
-    private static async Task HandleAsync()
+    private static async Task HandleAsync(
+        AppDbContext dbContext, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+
     }
 }
