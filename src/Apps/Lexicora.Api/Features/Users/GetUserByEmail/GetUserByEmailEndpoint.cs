@@ -5,7 +5,6 @@ using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Validation;
 
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 using Npgsql;
 
@@ -20,22 +19,21 @@ public class GetUserByEmailEndpoint : IEndpoint
             .WithTags("Users")
             .WithSummary("Get user by email")
             .WithDescription("Gets a user by email.")
-            .WithParameterMetadata(0, "The email of the user to retrieve. A valid email address is required.");
+            .WithParameterMetadata(0, "The email of the user to retrieve. A valid email address is required.")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Ok<GetUserByEmailResponse>, NotFound, BadRequest<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<Ok<GetUserByEmailResponse>, NotFound, ProblemHttpResult>> HandleAsync(
         string email, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         // Maybe implement validation only partially in regex for performance
         if (!RouteVariables.IsValidEmail(email))
         {
-            return TypedResults.BadRequest(new ProblemDetails
-            {
-                Title = "Invalid Email",
-                Detail = $"The value '{email}' is not a valid email address.",
-                Status = StatusCodes.Status400BadRequest,
-                Extensions = { ["parameter"] = "email" }
-            });
+            return TypedResults.Problem(
+                title: "Invalid Email",
+                detail: $"The value '{email}' is not a valid email address.",
+                statusCode: StatusCodes.Status400BadRequest,
+                extensions: new Dictionary<string, object?> { ["parameter"] = "email" });
         }
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);

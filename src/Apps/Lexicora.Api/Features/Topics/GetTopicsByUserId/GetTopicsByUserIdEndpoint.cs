@@ -31,7 +31,7 @@ public class GetTopicsByUserIdEndpoint : IEndpoint
          * For example, filter by name or tags, sort by created date or name, and paginate with limit and offset or cursor-based pagination.
          */
 
-        var userUlid = Ulid.Parse(userId);
+        var userUlid = Ulid.Parse(userId); // Safe, because of the route constraint.
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
 
@@ -50,7 +50,9 @@ public class GetTopicsByUserIdEndpoint : IEndpoint
                            updated_at AS UpdatedAt,
                            entry_count AS EntryCount
                            FROM public.topics
-                           WHERE user_id = @UserId;
+                           WHERE user_id = @UserId
+                           ORDER BY id; -- ULIDs are time-ordered, so this sorts by creation time.
+
                            """;
 
         var command = new CommandDefinition(

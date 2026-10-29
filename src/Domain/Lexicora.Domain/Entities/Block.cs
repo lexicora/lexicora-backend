@@ -1,12 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-using Lexicora.Domain.Serialization;
-
 namespace Lexicora.Domain.Entities;
 
 public class Block()
 {
+    // Parsed once, JsonElement is an immutable value, so the instance can be shared. Avoids reflection based serialization.
+    private static readonly JsonElement EmptyProps = JsonElement.Parse("{}");
+
     [SetsRequiredMembers]
     public Block(Guid id, Guid entryId, Guid? parentBlockId,
         double order, string type, JsonElement propsJson, JsonElement? contentJson,
@@ -29,7 +30,7 @@ public class Block()
 
     public double Order { get; set; }
     public required string Type { get; set; } = string.Empty; // Part of actual BlockNote schema.
-    public JsonElement PropsJson { get; set; } = "{}".ToJsonElement(/*DomainJsonContext.Default.String*/); // enable context if needed // Part of actual BlockNote schema.
+    public JsonElement PropsJson { get; set; } = EmptyProps; // Part of actual BlockNote schema.
     public JsonElement? ContentJson { get; set; } // Part of actual BlockNote schema.
 
 

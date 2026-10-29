@@ -20,7 +20,7 @@ namespace Lexicora.Api;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -35,8 +35,6 @@ public class Program
             //IncrementRandomSource = new PseudoRandomProvider()
         };
 
-        //SqlMapper.AddTypeHandler(new JsonElementTypeHandler());
-
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -50,21 +48,13 @@ public class Program
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.AllowTrailingCommas = true;
-            //options.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow; // already default behavior
-            //options.SerializerOptions.MaxDepth = 32; // default is 64, adjust if necessary
 
-            //var combinedResolver = JsonTypeInfoResolver.Combine(
-            //    AppJsonContext.Default
-            //    WeatherForecastJsonContext.Default
-            //);
-
-            //options.SerializerOptions.TypeInfoResolverChain.Insert(0, combinedResolver);
-            // Alternatively, you can set the TypeInfoResolver directly if you don't have other resolvers to combine.
-
-            // Maybe implement source generator that iterates through all contexts and lists them here.
+            // Reflection-based serialization is disabled (see Directory.Build.props),
+            // so every request/response type must come from one of these source-generated contexts.
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(1, TopicsJsonContext.Default);
             options.SerializerOptions.TypeInfoResolverChain.Insert(2, UsersJsonContext.Default);
+            options.SerializerOptions.TypeInfoResolverChain.Insert(3, EntriesJsonContext.Default);
         });
 
         builder.Services.Configure<RouteOptions>(options =>
@@ -80,7 +70,6 @@ public class Program
             options.CustomizeProblemDetails = context =>
             {
                 context.ProblemDetails.Extensions.Remove("traceId");
-                //context.ProblemDetails.Extensions.Remove("requestId");
 
                 // Check if the error is specifically a bad JSON request
                 if (context.Exception is BadHttpRequestException badRequestEx)
@@ -101,21 +90,12 @@ public class Program
             };
         });
 
-        // Maybe add later if needed manual mapping might be slightly slower, but is clearer.
-        //SqlMapper.AddTypeHandler(new UlidTypeHandler());
-        //SqlMapper.AddTypeHandler(new JsonElementTypeHandler());
-
         // Configure the database connection and register the data source as a singleton
-        var connectionString = builder.Configuration.GetConnectionString("Postgres");
-        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-        // Add Json configuration here so that Dapper and EF Core for that part can properly work with jsonb columns.
-        //var jsonOptions = new JsonSerializerOptions
-        //{
-        //    TypeInfoResolver = AppJsonContext.Default
-        //};
-        //dataSourceBuilder.ConfigureJsonOptions(jsonOptions);
-        //dataSourceBuilder.EnableDynamicJson();
-        var dataSource = dataSourceBuilder.Build();
+        var connectionString = builder.Configuration.GetConnectionString("Postgres")
+            ?? throw new InvalidOperationException(
+                "Connection string 'Postgres' is not configured. Set 'ConnectionStrings:Postgres' via appsettings, user secrets or the 'ConnectionStrings__Postgres' environment variable.");
+
+        var dataSource = new NpgsqlDataSourceBuilder(connectionString).Build();
 
         builder.Services.AddSingleton(dataSource);
 
@@ -135,20 +115,25 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseExceptionHandler();
-        //app.UseExceptionHandler(exceptionHandlerApp =>
-        //{
-        //    exceptionHandlerApp.Run(async httpContext =>
-        //    {
-        //        var pds = httpContext.RequestServices.GetService<IProblemDetailsService>();
-        //        if (pds == null
-        //            || !await pds.TryWriteAsync(new ProblemDetailsContext { HttpContext = httpContext }))
-        //        {
-        //            // Fallback behavior
-        //            await httpContext.Response.WriteAsync("Fallback: An error occurred.");
-        //        }
-        //    });
-        //});
+        app.UseExceptionHandler(new ExceptionHandlerOptions
+        {
+            // Client errors like malformed JSON surface as BadHttpRequestException, keep their 4xx status instead of a 500.
+            StatusCodeSelector = exception => exception is BadHttpRequestException badRequestEx
+                ? badRequestEx.StatusCode
+                : StatusCodes.Status500InternalServerError,
+
+            // A client sending a bad request is not a server error, so don't log it as one.
+            SuppressDiagnosticsCallback = context => context.Exception is BadHttpRequestException
+        });
+
+        // Apply pending migrations, so a fresh local database works with a plain `dotnet run`.
+        if (app.Environment.IsDevelopment())
+        {
+            await using var scope = app.Services.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            await dbContext.Database.MigrateAsync();
+        }
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -158,13 +143,11 @@ public class Program
             {
                 options
                     .WithTheme(ScalarTheme.Purple)
-                    //.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch)
                     .HideClientButton()
                     .WithTitle("Lexicora API Reference")
                     .ShowOperationId()
                     .SortOperationsByMethod();
             });
-            app.UseDeveloperExceptionPage();
         }
 
         app.UseStatusCodePages();
@@ -177,9 +160,9 @@ public class Program
 
         app.MapConfiguredEndpoints();
 
-        app.Run();
+        await app.RunAsync();
 
         // TODO: Add cors configuration if needed, maybe with a policy that can be applied to specific endpoints.
-        // TODO: Potentially add global error handling middleware, logging, rate limiting etc.
+        // TODO: Potentially add rate limiting, health checks etc.
     }
 }

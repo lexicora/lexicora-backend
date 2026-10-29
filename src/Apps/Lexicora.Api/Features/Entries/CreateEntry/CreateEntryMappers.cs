@@ -32,12 +32,7 @@ public static class CreateEntryMappers
 
         if (request.Blocks is { Count: > 0 })
         {
-            var entryId = id.ToGuid();
-            for (int i = 0; i < request.Blocks.Count; i++)
-            {
-                var orderGap = ( i + 1 ) * 1000.0;
-                entry.Blocks.Add(request.Blocks[i].MapToEntity(entryId, null, orderGap));
-            }
+            entry.Blocks = request.Blocks.MapToEntities(entry.Id);
         }
 
         return entry;
@@ -63,35 +58,4 @@ public static class CreateEntryMappers
         entry.Byline,
         entry.PublishedAt
     );
-
-    public static Block MapToEntity(this FlatBlock flatBlock, Guid entryId, Guid? parentId, double orderIndex, bool newIdsForBlocks = true)
-    {
-        var blockId = newIdsForBlocks
-            ? Ulid.New(UlidConfigurations.BatchOptions).ToGuid()
-            : Guid.TryParse(flatBlock.Id, out var directGuid)
-                ? directGuid
-                : Ulid.TryParseStrict(flatBlock.Id, out var ulid)
-                    ? ulid.ToGuid()
-                    : Ulid.New(UlidConfigurations.BatchOptions).ToGuid(); // Fallback if invalid ID passed
-
-        var block = new Block(
-            blockId,
-            entryId,
-            parentId,
-            flatBlock.Order ?? orderIndex,
-            flatBlock.Type,
-            flatBlock.PropsJson,
-            flatBlock.ContentJson);
-
-        if (flatBlock.Children.Count > 0)
-        {
-            for (int i = 0; i < flatBlock.Children.Count; i++)
-            {
-                var childOrderGap = ( i + 1 ) * 1000.0;
-                block.Children.Add(flatBlock.Children[i].MapToEntity(entryId, block.Id, childOrderGap, newIdsForBlocks));
-            }
-        }
-
-        return block;
-    }
 }

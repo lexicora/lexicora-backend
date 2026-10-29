@@ -15,7 +15,7 @@ public class DeleteUserEndpoint : IEndpoint
             .WithTags("Users")
             .WithSummary("Delete User")
             .WithDescription("Deletes a user with given identifier.")
-            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
+            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the user.");
     }
 
     private static async Task<Results<NoContent, NotFound>> HandleAsync(

@@ -27,6 +27,14 @@ public class DeleteTopicEndpoint : IEndpoint
 
         if (topicToDelete is null) return TypedResults.NotFound();
 
+        // Keep the denormalized counter in sync, both changes are saved in the same transaction.
+        var owner = await dbContext.Users.FindAsync([topicToDelete.UserId], cancellationToken);
+        if (owner is not null)
+        {
+            owner.TopicCount--;
+            owner.EntryCount -= topicToDelete.EntryCount; // The topic's entries are removed by the cascading delete.
+        }
+
         dbContext.Topics.Remove(topicToDelete);
         await dbContext.SaveChangesAsync(cancellationToken);
 

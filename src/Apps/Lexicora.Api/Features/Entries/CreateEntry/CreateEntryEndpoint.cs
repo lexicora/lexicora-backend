@@ -1,5 +1,4 @@
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Api.Infrastructure.Filters;
 using Lexicora.Domain.Common;
 using Lexicora.Domain.Entities;
 using Lexicora.Persistence.Postgres;
@@ -17,56 +16,38 @@ public class CreateEntryEndpoint : IEndpoint
             .WithName("CreateEntry")
             .WithTags("Entries")
             .WithSummary("Create new entry")
-            .WithDescription("Creates a new entry. The request body must include the required properties for creating an entry. Returns the created entry on success.")
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .AddEndpointFilter<ValidationFilter<CreateEntryRequest>>();
+            .WithDescription("Creates a new entry, including its content blocks. Either an existing `topicId` or a new `topic` must be provided. Returns the created entry on success.")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Created<CreateEntryResponse>, BadRequest<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<CreatedAtRoute<CreateEntryResponse>, ProblemHttpResult>> HandleAsync(
         [FromBody] CreateEntryRequest request,
         AppDbContext dbContext, CancellationToken cancellationToken)
     {
         Topic? topic;
         User? user;
-        Guid userId;
 
         if (!string.IsNullOrWhiteSpace(request.TopicId) && request.Topic is not null)
         {
-            return TypedResults.BadRequest(new ProblemDetails
-            {
-                Title = "Invalid Request",
-                Detail = "Cannot provide both 'TopicId' and 'Topic'. Provide only one or the other.",
-                Status = StatusCodes.Status400BadRequest
-            });
+            return InvalidRequest("Cannot provide both 'TopicId' and 'Topic'. Provide only one or the other.");
         }
 
         if (!string.IsNullOrWhiteSpace(request.TopicId))
         {
-            var parsedTopicId = Ulid.Parse(request.TopicId).ToGuid();
+            var parsedTopicId = Ulid.Parse(request.TopicId).ToGuid(); // Safe, since it's validated by the request validation.
             topic = await dbContext.Topics.FindAsync([parsedTopicId], cancellationToken);
 
             if (topic is null)
             {
-                return TypedResults.BadRequest(new ProblemDetails
-                {
-                    Title = "Invalid Topic",
-                    Detail = $"Topic with ID: '{request.TopicId}' does not exist.",
-                    Status = StatusCodes.Status400BadRequest
-                });
+                return TypedResults.Problem(
+                    title: "Invalid Topic",
+                    detail: $"Topic with ID: '{request.TopicId}' does not exist.",
+                    statusCode: StatusCodes.Status400BadRequest,
+                    extensions: new Dictionary<string, object?> { ["parameter"] = "topicId" });
             }
 
-            userId = topic.UserId;
-
-            user = await dbContext.Users.FindAsync([userId], cancellationToken);
-            if (user is null)
-            {
-                return TypedResults.BadRequest(new ProblemDetails
-                {
-                    Title = "Invalid User",
-                    Detail = "User associated with the topic does not exist.",
-                    Status = StatusCodes.Status400BadRequest
-                });
-            }
+            // Can't be null, the foreign key guarantees the owner of the topic exists.
+            user = await dbContext.Users.FindAsync([topic.UserId], cancellationToken);
         }
         else if (request.Topic is not null)
         {
@@ -75,12 +56,11 @@ public class CreateEntryEndpoint : IEndpoint
 
             if (user is null)
             {
-                return TypedResults.BadRequest(new ProblemDetails
-                {
-                    Title = "Invalid User",
-                    Detail = $"User with ID: '{request.Topic.UserId}' does not exist.",
-                    Status = StatusCodes.Status400BadRequest
-                });
+                return TypedResults.Problem(
+                    title: "Invalid User",
+                    detail: $"User with ID: '{request.Topic.UserId}' does not exist.",
+                    statusCode: StatusCodes.Status400BadRequest,
+                    extensions: new Dictionary<string, object?> { ["parameter"] = "topic.userId" });
             }
 
             var topicId = Ulid.New();
@@ -90,32 +70,35 @@ public class CreateEntryEndpoint : IEndpoint
                 Utilities.CreateSlug(request.Topic.Name, topicId.ToString()),
                 request.Topic.Name.Trim(),
                 request.Topic.Description?.Trim(),
-                []
+                [],
+                request.Topic.IsFavorite
             );
 
             user.TopicCount++;
             dbContext.Topics.Add(topic);
-
-            userId = parsedUserId;
         }
         else
         {
-            return TypedResults.BadRequest(new ProblemDetails
-            {
-                Title = "Invalid Request",
-                Detail = "Either an existing TopicId or a new Topic must be provided.",
-                Status = StatusCodes.Status400BadRequest
-            });
+            return InvalidRequest("Either an existing TopicId or a new Topic must be provided.");
         }
 
-        var entry = request.MapToEntity(userId, topic.Id);
+        var entry = request.MapToEntity(topic.UserId, topic.Id);
 
+        // Keep the denormalized counters in sync, everything is saved in the same transaction.
         topic.EntryCount++;
-        user.EntryCount++;
+        user!.EntryCount++;
 
         dbContext.Entries.Add(entry);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Created($"/entries/{entry.Id}", entry.MapToResponse());
+        var response = entry.MapToResponse();
+
+        return TypedResults.CreatedAtRoute(
+            response, "GetEntryById", new RouteValueDictionary { ["id"] = response.Id.ToLowerString() });
     }
+
+    private static ProblemHttpResult InvalidRequest(string detail) => TypedResults.Problem(
+        title: "Invalid Request",
+        detail: detail,
+        statusCode: StatusCodes.Status400BadRequest);
 }

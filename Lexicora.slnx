@@ -11,12 +11,16 @@
   <Folder Name="/3_Apps/">
     <Project Path="src/Apps/Lexicora.Api/Lexicora.Api.csproj" Id="4f17b8c5-f1d9-42a7-9a0a-73c26a39ced4" />
   </Folder>
-  <Folder Name="/9_Tests/" />
+  <Folder Name="/9_Tests/">
+    <Project Path="tests/Lexicora.UnitTests/Lexicora.UnitTests.csproj" />
+  </Folder>
   <Folder Name="/_SolutionItems/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="docker-compose.yml" />
+    <File Path="dotnet-tools.json" />
     <File Path="global.json" />
     <File Path="README.md" />
   </Folder>

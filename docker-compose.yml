@@ -1,0 +1,21 @@
+# Local development database. Matches the connection string in src/Apps/Lexicora.Api/appsettings.Development.json.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: lexicora-postgres
+    environment:
+      POSTGRES_DB: lexicora_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - lexicora-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lexicora_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  lexicora-postgres-data:

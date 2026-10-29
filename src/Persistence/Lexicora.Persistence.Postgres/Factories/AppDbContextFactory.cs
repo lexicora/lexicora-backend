@@ -22,7 +22,7 @@ internal class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException("Connection string 'PostgresConnection' not found in configuration.");
+            throw new InvalidOperationException("Connection string 'Postgres' not found in configuration.");
         }
 
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();

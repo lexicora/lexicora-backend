@@ -1,5 +1,5 @@
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Api.Infrastructure.Filters;
+using Lexicora.Domain.Common;
 using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -19,10 +19,10 @@ public class CreateUserEndpoint : IEndpoint
             .WithDescription(
                 "Creates a new user. The request body must include the required properties for creating a user. Returns the created user on success.")
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .AddEndpointFilter<ValidationFilter<CreateUserRequest>>();
+            .ProducesProblem(StatusCodes.Status409Conflict);
     }
 
-    private static async Task<Results<Created<CreateUserResponse>, Conflict<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<CreatedAtRoute<CreateUserResponse>, ProblemHttpResult>> HandleAsync(
         [FromBody] CreateUserRequest request,
         AppDbContext dbContext,
         CancellationToken cancellationToken)
@@ -35,16 +35,15 @@ public class CreateUserEndpoint : IEndpoint
 
         if (exists)
         {
-            return TypedResults.Conflict(new ProblemDetails
-            {
-                Title = "User already exists",
-                Detail = "A user with the given Email, or Username already exists.",
-                Extensions =
+            return TypedResults.Problem(
+                title: "User already exists",
+                detail: "A user with the given Email, or Username already exists.",
+                statusCode: StatusCodes.Status409Conflict,
+                extensions: new Dictionary<string, object?>
                 {
                     ["conflictingEmail"] = request.Email,
                     ["conflictingUsername"] = request.Username
-                }
-            });
+                });
         }
 
         var user = request.MapToEntity();
@@ -52,6 +51,9 @@ public class CreateUserEndpoint : IEndpoint
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Created($"/users/{user.Id}", user.MapToResponse());
+        var response = user.MapToResponse();
+
+        return TypedResults.CreatedAtRoute(
+            response, "GetUserById", new RouteValueDictionary { ["id"] = response.Id.ToLowerString() });
     }
 }

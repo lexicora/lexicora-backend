@@ -1,5 +1,5 @@
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Api.Infrastructure.Filters;
+using Lexicora.Domain.Common;
 using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -16,11 +16,10 @@ public class CreateTopicEndpoint : IEndpoint
             .WithTags("Topics")
             .WithSummary("Create new topic")
             .WithDescription("Creates a new topic. The request body must include the required properties for creating a topic. Returns the created topic on success.")
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .AddEndpointFilter<ValidationFilter<CreateTopicRequest>>();
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Created<CreateTopicResponse>, BadRequest<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<CreatedAtRoute<CreateTopicResponse>, ProblemHttpResult>> HandleAsync(
         [FromBody] CreateTopicRequest request,
         AppDbContext dbContext,
         CancellationToken cancellationToken)
@@ -30,12 +29,11 @@ public class CreateTopicEndpoint : IEndpoint
         var user = await dbContext.Users.FindAsync([userId.ToGuid()], cancellationToken);
         if (user is null)
         {
-            return TypedResults.BadRequest(new ProblemDetails
-            {
-                Title = "Invalid User",
-                Detail = $"User with ID: '{request.UserId}' does not exist.",
-                Status = StatusCodes.Status400BadRequest
-            });
+            return TypedResults.Problem(
+                title: "Invalid User",
+                detail: $"User with ID: '{request.UserId}' does not exist.",
+                statusCode: StatusCodes.Status400BadRequest,
+                extensions: new Dictionary<string, object?> { ["parameter"] = "userId" });
         }
 
         var topic = request.MapToEntity();
@@ -45,6 +43,9 @@ public class CreateTopicEndpoint : IEndpoint
         dbContext.Topics.Add(topic);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Created($"/topics/{topic.Id}", topic.MapToResponse());
+        var response = topic.MapToResponse();
+
+        return TypedResults.CreatedAtRoute(
+            response, "GetTopicById", new RouteValueDictionary { ["id"] = response.Id.ToLowerString() });
     }
 }

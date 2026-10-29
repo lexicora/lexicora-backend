@@ -19,7 +19,7 @@ public class GetTopicBySlugEndpoint : IEndpoint
             .WithSummary("Get topic by slug")
             .WithDescription(
                 "Gets a topic by slug. Navigation properties are not included, by default so no dto mapping necessary.") // Supposedly supports markdown and used for extensive documentation.
-            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
+            .WithParameterMetadata(0, "The slug of the topic, e.g. `my-topic-name-abcdefghjkmn` (a name part followed by a 12 character ULID suffix).");
     }
 
     private static async Task<Results<Ok<GetTopicBySlugResponse>, NotFound>> HandleAsync(
