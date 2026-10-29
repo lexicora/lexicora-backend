@@ -1,5 +1,5 @@
 using Lexicora.Api.Contracts.Endpoints;
-using Lexicora.Api.Infrastructure.Filters;
+using Lexicora.Api.Extensions;
 using Lexicora.Persistence.Postgres;
 
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,18 +18,23 @@ public class UpdateUserEndpoint : IEndpoint
             .WithSummary("Update existing user")
             .WithDescription(
                 "Updates an existing user. The request body must include the required properties for updating a user. Returns the updated user on success.")
+            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the user.")
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .AddEndpointFilter<ValidationFilter<UpdateUserRequest>>();
+            .ProducesProblem(StatusCodes.Status409Conflict);
     }
 
-    private static async Task<Results<Ok<UpdateUserResponse>, NotFound, Conflict<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<Ok<UpdateUserResponse>, NotFound, ProblemHttpResult>> HandleAsync(
         string id,
         [FromBody] UpdateUserRequest request,
         AppDbContext dbContext,
         CancellationToken cancellationToken)
     {
-        var ulid = Ulid.Parse(id);
+        var ulid = Ulid.Parse(id); // Safe, because of the route constraint.
         var guidId = ulid.ToGuid();
+
+        var existingUser = await dbContext.Users.FindAsync([guidId], cancellationToken);
+
+        if (existingUser is null) return TypedResults.NotFound();
 
         var conflictExists = await dbContext.Users.AnyAsync(
             u => u.Id != guidId && ( u.Email == request.Email || u.Username == request.Username ),
@@ -37,21 +42,16 @@ public class UpdateUserEndpoint : IEndpoint
 
         if (conflictExists)
         {
-            return TypedResults.Conflict(new ProblemDetails
-            {
-                Title = "Email and or Username not available",
-                Detail = "Another user with the given Email and or Username already exists.",
-                Extensions =
+            return TypedResults.Problem(
+                title: "Email and or Username not available",
+                detail: "Another user with the given Email and or Username already exists.",
+                statusCode: StatusCodes.Status409Conflict,
+                extensions: new Dictionary<string, object?>
                 {
                     ["conflictingEmail"] = request.Email,
                     ["conflictingUsername"] = request.Username
-                }
-            });
+                });
         }
-
-        var existingUser = await dbContext.Users.FindAsync([guidId], cancellationToken);
-
-        if (existingUser is null) return TypedResults.NotFound();
 
         existingUser.UpdateWithRequestData(request);
         await dbContext.SaveChangesAsync(cancellationToken); // Save tracked changes to the database

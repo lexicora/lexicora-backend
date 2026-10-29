@@ -13,16 +13,15 @@ public class UsersConfiguration : IEndpointConfiguration
 {
     public static void MapEndpoints(IEndpointRouteBuilder builder, bool? isDevelopment = null)
     {
-        var usersGroup = builder.MapGroup("/users")
-            .WithTags("Users");
+        var usersGroup = builder.MapGroup("/users").WithTags("Users");
+
+        // CREATE (POST)
+        CreateUserEndpoint.Map(usersGroup);
 
         // READ (GET)
         GetUserByIdEndpoint.Map(usersGroup);
         GetUserByEmailEndpoint.Map(usersGroup);
         GetUserByUsernameEndpoint.Map(usersGroup);
-
-        // CREATE (POST)
-        CreateUserEndpoint.Map(usersGroup);
 
         // UPDATE (PUT/PATCH)
         UpdateUserEndpoint.Map(usersGroup);

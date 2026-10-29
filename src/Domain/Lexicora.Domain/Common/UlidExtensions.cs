@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Text;
 
 namespace Lexicora.Domain.Common;
 
@@ -34,5 +35,19 @@ public static class UlidExtensions
             result = default;
             return false;
         }
+    }
+
+    extension(Ulid ulid)
+    {
+        /// <summary>
+        /// Formats the ULID as a lowercase Crockford's Base32 string, matching the API's JSON representation.
+        /// </summary>
+        /// <remarks>Formats and lowercases directly into the new string's buffer, so only one allocation is made.</remarks>
+        public string ToLowerString() =>
+            string.Create(Ulid.UlidStringLength, ulid, static (buffer, value) =>
+            {
+                value.TryFormat(buffer, out _, [], null);
+                Ascii.ToLowerInPlace(buffer, out _);
+            });
     }
 }

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Apps\Lexicora.Api\Lexicora.Api.csproj" />
+    <ProjectReference Include="..\..\src\Domain\Lexicora.Domain\Lexicora.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="ByteAether.Ulid" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

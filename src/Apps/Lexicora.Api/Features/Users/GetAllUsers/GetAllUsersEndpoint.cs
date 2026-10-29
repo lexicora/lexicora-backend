@@ -1,9 +1,9 @@
 using Dapper;
 
 using Lexicora.Api.Contracts.Endpoints;
+using Lexicora.Api.Extensions;
 
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 using Npgsql;
 
@@ -17,20 +17,21 @@ public class GetAllUsersEndpoint : IEndpoint
             .WithName("GetAllUsers")
             .WithTags("Development")
             .WithSummary("Get all users")
-            .WithDescription("Gets all users with an optional limit. The default limit is 1000. This endpoint is intended for testing and development purposes only and should not be exposed in production environments.");
+            .WithDescription("Gets all users with an optional limit. The default limit is 1000. This endpoint is intended for testing and development purposes only and should not be exposed in production environments.")
+            .WithParameterMetadata(0, "Maximum number of items to return. Must be non-negative, defaults to 1000.")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Ok<GetAllUsersResponseCollection>, BadRequest<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<Ok<GetAllUsersResponseCollection>, ProblemHttpResult>> HandleAsync(
         int? limit, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         if (limit < 0)
         {
-            return TypedResults.BadRequest(new ProblemDetails
-            {
-                Title = "Invalid Limit",
-                Detail = $"Invalid limit value: '{limit}'. Limit must be a non-negative integer.",
-                Status = StatusCodes.Status400BadRequest,
-            });
+            return TypedResults.Problem(
+                title: "Invalid Limit",
+                detail: $"Invalid limit value: '{limit}'. Limit must be a non-negative integer.",
+                statusCode: StatusCodes.Status400BadRequest,
+                extensions: new Dictionary<string, object?> { ["parameter"] = "limit" });
         }
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
@@ -48,6 +49,7 @@ public class GetAllUsersEndpoint : IEndpoint
                      entry_count AS EntryCount,
                      topic_count AS TopicCount
                      FROM public.users
+                     ORDER BY id -- ULIDs are time-ordered, so this sorts by creation time.
                      LIMIT @Limit
                      """;
 

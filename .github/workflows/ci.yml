@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release -warnaserror
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release
+
+      - name: Check EF Core migrations are up to date
+        working-directory: src/Apps/Lexicora.Api
+        run: |
+          dotnet tool restore
+          dotnet ef migrations has-pending-model-changes --project ../../Persistence/Lexicora.Persistence.Postgres --configuration Release --no-build

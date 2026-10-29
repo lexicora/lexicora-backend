@@ -5,7 +5,6 @@ using Lexicora.Api.Extensions;
 using Lexicora.Api.Infrastructure.Validation;
 
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 using Npgsql;
 
@@ -21,25 +20,26 @@ public class GetUserByUsernameEndpoint : IEndpoint
             .WithSummary("Get user by username")
             .WithDescription("Gets a user by username.")
             .WithParameterMetadata(0, "The username of the user to retrieve. A valid username is required. <br>" +
-                                      "Regex pattern: `^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$`");
+                                      "Regex pattern: `^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$`")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static async Task<Results<Ok<GetUserByUsernameResponse>, NotFound, BadRequest<ProblemDetails>>> HandleAsync(
+    private static async Task<Results<Ok<GetUserByUsernameResponse>, NotFound, ProblemHttpResult>> HandleAsync(
         string username, NpgsqlDataSource dataSource, CancellationToken cancellationToken)
     {
         // Maybe implement validation only partially in regex for performance 
         if (!RouteVariables.IsValidUsername(username))
         {
-            return TypedResults.BadRequest(new ProblemDetails
-            {
-                Title = "Invalid Username",
-                Detail = $"The value '{username}' is not a valid Username.",
-                Extensions =
+            return TypedResults.Problem(
+                title: "Invalid Username",
+                detail: $"The value '{username}' is not a valid Username.",
+                statusCode: StatusCodes.Status400BadRequest,
+                extensions: new Dictionary<string, object?>
                 {
-                    ["ValidUsernamePattern"] = "^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$",
-                    ["ValidUsernameDescription"] = "Valid Username must be between 3 and 30 characters and can contain letters, numbers, underscores and dots. It may not start with special characters."
-                }
-            });
+                    ["parameter"] = "username",
+                    ["validUsernamePattern"] = "^[a-zA-Z0-9](?:[a-zA-Z0-9]|[._](?![._])){1,28}[a-zA-Z0-9]$",
+                    ["validUsernameDescription"] = "Valid Username must be between 3 and 30 characters and can contain letters, numbers, underscores and dots. It may not start or end with special characters."
+                });
         }
 
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);

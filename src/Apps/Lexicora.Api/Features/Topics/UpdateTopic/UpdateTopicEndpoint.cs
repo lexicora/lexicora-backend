@@ -17,7 +17,8 @@ public class UpdateTopicEndpoint : IEndpoint
             .WithTags("Topics")
             .WithSummary("Update Topic")
             .WithDescription("Updates a topic with given identifier.")
-            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
+            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
     private static async Task<Results<Ok<UpdateTopicResponse>, NotFound>> HandleAsync(
@@ -26,7 +27,7 @@ public class UpdateTopicEndpoint : IEndpoint
         AppDbContext dbContext,
         CancellationToken cancellationToken)
     {
-        var ulid = Ulid.Parse(id);
+        var ulid = Ulid.Parse(id); // Safe, because of the route constraint.
 
         var existingTopic = await dbContext.Topics.FindAsync([ulid.ToGuid()], cancellationToken);
 

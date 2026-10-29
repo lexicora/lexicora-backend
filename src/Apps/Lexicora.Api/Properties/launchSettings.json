@@ -1,5 +1,16 @@
 {
   "profiles": {
+    "demo": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Database__Embedded": "true"
+      },
+      "launchBrowser": true,
+      "launchUrl": "scalar/v1",
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5177"
+    },
     "http": {
       "commandName": "Project",
       "environmentVariables": {

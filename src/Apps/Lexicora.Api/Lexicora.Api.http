@@ -1,6 +1,171 @@
 @Lexicora.Api_HostAddress = http://localhost:5177
 
-GET {{Lexicora.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+# A walkthrough of the API. Run the requests top to bottom, later requests reuse ids from earlier responses.
+
+### Create a user
+# @name createUser
+POST {{Lexicora.Api_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "email": "ada@example.com",
+  "username": "ada.lovelace",
+  "firstName": "Ada",
+  "lastName": "Lovelace",
+  "displayName": "Ada"
+}
+
+### Get the user by id, email and username (email and username lookups are case-insensitive)
+GET {{Lexicora.Api_HostAddress}}/users/{{createUser.response.body.$.id}}
 
 ###
+GET {{Lexicora.Api_HostAddress}}/users/by-email/ADA@example.com
+
+###
+GET {{Lexicora.Api_HostAddress}}/users/by-username/Ada.Lovelace
+
+### Update the user
+PUT {{Lexicora.Api_HostAddress}}/users/{{createUser.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "email": "ada@example.com",
+  "username": "ada.lovelace",
+  "firstName": "Ada",
+  "lastName": "King",
+  "displayName": "Countess of Lovelace"
+}
+
+### Validation errors are returned as RFC 9457 problem details
+POST {{Lexicora.Api_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "email": "not-an-email",
+  "username": "x",
+  "firstName": "",
+  "lastName": "Lovelace"
+}
+
+### Create a topic for the user
+# @name createTopic
+POST {{Lexicora.Api_HostAddress}}/topics
+Content-Type: application/json
+
+{
+  "userId": "{{createUser.response.body.$.id}}",
+  "name": "Analytical Engines",
+  "description": "Notes on Babbage's engines.",
+  "tags": ["history", "computing"]
+}
+
+### Get the topic by id and by slug
+GET {{Lexicora.Api_HostAddress}}/topics/{{createTopic.response.body.$.id}}
+
+###
+GET {{Lexicora.Api_HostAddress}}/topics/by-slug/{{createTopic.response.body.$.slug}}
+
+### Get all topics of the user
+GET {{Lexicora.Api_HostAddress}}/topics/by-user/{{createUser.response.body.$.id}}
+
+### Update the topic (the slug is regenerated from the new name, the ULID suffix stays stable)
+PUT {{Lexicora.Api_HostAddress}}/topics/{{createTopic.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "name": "Difference Engines",
+  "description": null,
+  "isFavorite": true,
+  "tags": ["history"]
+}
+
+### Save a page as an entry. The content is a BlockNote document, posted exactly as the editor produces it.
+# @name createEntry
+POST {{Lexicora.Api_HostAddress}}/entries
+Content-Type: application/json
+
+{
+  "topicId": "{{createTopic.response.body.$.id}}",
+  "title": "Analytical Engine",
+  "tags": ["babbage"],
+  "url": "https://en.wikipedia.org/wiki/Analytical_engine",
+  "originUrl": "https://en.wikipedia.org",
+  "languageCode": "en",
+  "siteName": "Wikipedia",
+  "blocks": [
+    {
+      "type": "heading",
+      "props": { "level": 2, "textColor": "default", "backgroundColor": "default", "textAlignment": "left", "isToggleable": false },
+      "content": [{ "type": "text", "text": "The store and the mill", "styles": { "bold": true } }],
+      "children": []
+    },
+    {
+      "type": "bulletListItem",
+      "props": { "textColor": "default", "backgroundColor": "default", "textAlignment": "left" },
+      "content": [{ "type": "text", "text": "Nested blocks are supported", "styles": {} }],
+      "children": [
+        {
+          "type": "bulletListItem",
+          "props": { "textColor": "default", "backgroundColor": "default", "textAlignment": "left" },
+          "content": [{ "type": "text", "text": "like this one", "styles": { "italic": true } }],
+          "children": []
+        }
+      ]
+    }
+  ]
+}
+
+### Alternatively, create the topic together with the entry
+POST {{Lexicora.Api_HostAddress}}/entries
+Content-Type: application/json
+
+{
+  "topic": { "userId": "{{createUser.response.body.$.id}}", "name": "Reading List" },
+  "title": "Note G",
+  "tags": [],
+  "url": "https://en.wikipedia.org/wiki/Note_G",
+  "originUrl": "https://en.wikipedia.org",
+  "languageCode": "en"
+}
+
+### Get the entry, including its content as a BlockNote document
+GET {{Lexicora.Api_HostAddress}}/entries/{{createEntry.response.body.$.id}}
+
+### Get all entries of a topic (without content)
+GET {{Lexicora.Api_HostAddress}}/entries/by-topic/{{createTopic.response.body.$.id}}
+
+### Update the entry and replace its content (omit "blocks" to keep the content)
+PUT {{Lexicora.Api_HostAddress}}/entries/{{createEntry.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "title": "The Analytical Engine",
+  "isFavorite": true,
+  "tags": ["babbage", "history"],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "props": { "textColor": "default", "backgroundColor": "default", "textAlignment": "left" },
+      "content": [{ "type": "text", "text": "Rewritten content.", "styles": {} }],
+      "children": []
+    }
+  ]
+}
+
+### Development only: list everything
+GET {{Lexicora.Api_HostAddress}}/users/all?limit=10
+
+###
+GET {{Lexicora.Api_HostAddress}}/topics/all?limit=10
+
+###
+GET {{Lexicora.Api_HostAddress}}/entries/all?limit=10
+
+### Clean up (deleting a topic cascades to its entries, deleting a user to everything they own)
+DELETE {{Lexicora.Api_HostAddress}}/entries/{{createEntry.response.body.$.id}}
+
+###
+DELETE {{Lexicora.Api_HostAddress}}/topics/{{createTopic.response.body.$.id}}
+
+###
+DELETE {{Lexicora.Api_HostAddress}}/users/{{createUser.response.body.$.id}}

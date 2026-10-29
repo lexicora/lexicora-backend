@@ -34,8 +34,9 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
 
                 Span<byte> byteSpan = stackalloc byte[Ulid.UlidStringLength];
                 byteSequence.CopyTo(byteSpan);
-                Ulid.TryParse(byteSpan, null, out var ulid);
-                return ulid;
+                return Ulid.TryParse(byteSpan, null, out var ulid)
+                    ? ulid
+                    : throw new JsonException("Ulid invalid: invalid character");
             }
             else
             {
@@ -45,8 +46,9 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
                     throw new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}");
                 }
 
-                Ulid.TryParse(byteSpan, null, out var ulid);
-                return ulid;
+                return Ulid.TryParse(byteSpan, null, out var ulid)
+                    ? ulid
+                    : throw new JsonException("Ulid invalid: invalid character");
             }
         }
         catch (IndexOutOfRangeException ex)
@@ -57,19 +59,6 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
         {
             throw new JsonException("Ulid invalid: invalid character", ex);
         }
-        //catch (Exception ex) when (ex is IndexOutOfRangeException or OverflowException)
-        //{
-        //    throw new JsonException("Ulid invalid: invalid format or character", ex);
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw ex switch
-        //    {
-        //        IndexOutOfRangeException => new JsonException($"Ulid invalid: length must be {Ulid.UlidStringLength}", ex),
-        //        OverflowException => new JsonException("Ulid invalid: invalid character", ex),
-        //        _ => new JsonException("Ulid invalid: unexpected error during parsing", ex)
-        //    };
-        //}
     }
 
     /// <inheritdoc/>
@@ -95,7 +84,7 @@ public class LowercaseUlidJsonConverter : JsonConverter<Ulid>
         Span<byte> lowerBuffer = stackalloc byte[Ulid.UlidStringLength];
         Ascii.ToLower(ulidString, lowerBuffer, out _);
 
-        writer.WritePropertyName(ulidString);
+        writer.WritePropertyName(lowerBuffer);
     }
 
     /// <inheritdoc/>

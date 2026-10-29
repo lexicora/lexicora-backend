@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Lexicora.Persistence.Postgres.Factories;
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+internal class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
@@ -22,7 +22,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException("Connection string 'PostgresConnection' not found in configuration.");
+            throw new InvalidOperationException("Connection string 'Postgres' not found in configuration.");
         }
 
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();

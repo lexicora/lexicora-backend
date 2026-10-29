@@ -18,7 +18,7 @@ public class GetUserByIdEndpoint : IEndpoint
             .WithTags("Users")
             .WithSummary("Get user by id")
             .WithDescription("Gets a user by id.")
-            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the topic.");
+            .WithUlidId(description: "The unique Lexicographical Identifier (ULID) for the user.");
     }
 
     private static async Task<Results<Ok<GetUserByIdResponse>, NotFound>> HandleAsync(
