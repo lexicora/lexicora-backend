@@ -3,6 +3,7 @@ using System.Text.Json;
 using Dapper;
 
 using Lexicora.Api.Extensions;
+using Lexicora.Api.Infrastructure.Database;
 using Lexicora.Api.Infrastructure.Json.Contexts;
 using Lexicora.Api.Infrastructure.RouteConstraints;
 using Lexicora.Persistence.Postgres;
@@ -90,8 +91,14 @@ public class Program
             };
         });
 
+        // Zero-setup mode: run a throwaway PostgreSQL server alongside the API instead of connecting to an existing one.
+        await using var embeddedPostgres = builder.Configuration.GetValue<bool>("Database:Embedded")
+            ? await EmbeddedPostgres.StartAsync()
+            : null;
+
         // Configure the database connection and register the data source as a singleton
-        var connectionString = builder.Configuration.GetConnectionString("Postgres")
+        var connectionString = embeddedPostgres?.ConnectionString
+            ?? builder.Configuration.GetConnectionString("Postgres")
             ?? throw new InvalidOperationException(
                 "Connection string 'Postgres' is not configured. Set 'ConnectionStrings:Postgres' via appsettings, user secrets or the 'ConnectionStrings__Postgres' environment variable.");
 
@@ -127,12 +134,15 @@ public class Program
         });
 
         // Apply pending migrations, so a fresh local database works with a plain `dotnet run`.
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || embeddedPostgres is not null)
         {
             await using var scope = app.Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await dbContext.Database.MigrateAsync();
+
+            // The embedded database starts empty every time, so give it something to show.
+            if (embeddedPostgres is not null) await DemoData.SeedAsync(dbContext);
         }
 
         // Configure the HTTP request pipeline.

@@ -400,3 +400,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp
+# Embedded PostgreSQL binaries and data (if run from a project directory)
+pg_embed/
